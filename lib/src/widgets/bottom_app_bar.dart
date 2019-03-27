@@ -35,7 +35,7 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
   Widget build(BuildContext context) {
     return BottomAppBar(
       child: Container(
-        height: 60,
+        height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: _bottomAppBarItems(),
@@ -63,16 +63,23 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
         ? widget.selectedItemColor
         : widget.unselectedItemColor;
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Icon(
-          appBarItemData.iconData,
-          color: itemColor,
+    return Material(
+      child: InkWell(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(appBarItemData.iconData, color: itemColor,),
+            Container(
+              margin: EdgeInsets.only(top: 5.0),
+              child: Text(appBarItemData.iconText,
+                style: Theme.of(context).textTheme.caption.copyWith(color: itemColor),),
+            ),
+          ],
         ),
-        Text(appBarItemData.iconText,
-          style: Theme.of(context).textTheme.caption.copyWith(color: itemColor),),
-      ],
+        onTap: (){
+          onItemPressed(itemIndex);
+          },
+      ),
     );
   }
 }

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class GoTicketsTheme{
 
 
-  static final Color darkLavender = Color(0xFF8F6FA7);
-  static final Color lightLavender = Color(0xFF9876B1);
-  static final Color darkGrey = Color(0xFFAAAAB7);
-  static final Color lightGrey = Color(0xFFB4B4C2);
-  static final Color darkEbonyClay = Color(0xFF2F313B);
-  static final Color lightEbonyClay = Color(0xFF353643);
+  static final Color darkLavender = Color(0xff8F6FA7);
+  static final Color lightLavender = Color(0xff9876B1);
+  static final Color darkGrey = Color(0xffAAAAB7);
+  static final Color lightGrey = Color(0xffB4B4C2);
+  static final Color darkEbonyClay = Color(0xff2F313B);
+  static final Color lightEbonyClay = Color(0xff353643);
 
 
 

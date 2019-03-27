@@ -35,7 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor: GoTicketsTheme.darkGrey,
         bottomAppBarItemData: [
           BottomAppBarItemData(iconData: Icons.party_mode, iconText: 'Events'),
-          BottomAppBarItemData(iconData: Icons.party_mode, iconText: 'Events')
+          BottomAppBarItemData(iconData: Icons.location_on, iconText: 'Places'),
+          BottomAppBarItemData(iconData: FontAwesomeIcons.user, iconText: 'Profile'),
+          BottomAppBarItemData(iconData: Icons.message, iconText: 'Chats'),
+          BottomAppBarItemData(iconData: Icons.party_mode, iconText: 'Tickers')
         ],),
     );
   }
