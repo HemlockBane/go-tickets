@@ -26,6 +26,7 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
   int _selectedItemIndex = 0;
 
   _updateSelectedItemIndex(int newSelectedItemIndex) {
+    widget.onItemSelected(newSelectedItemIndex);
     setState(() {
       _selectedItemIndex = newSelectedItemIndex;
     });
