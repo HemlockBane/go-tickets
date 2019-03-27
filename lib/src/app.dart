@@ -9,7 +9,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: GoTicketsTheme().getAppTheme(),
-      home: HomePage(),
+      home: HomeScreen(),
     );
   }
 }
