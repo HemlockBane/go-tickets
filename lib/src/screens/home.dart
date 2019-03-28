@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List titleList = ['ALL', 'FAVORITE', 'MAP'];
+  //List titleList = ['ALL', 'FAVORITE', 'MAP'];
 
   static List<String>bottomAppBarTextList = [
     'Events',
@@ -35,13 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
     ChatsScreen(),
     TicketsScreen()
   ];
-  Widget _currentScreen = ChatsScreen();
+  Widget _currentScreen = screenList[0];
 
 
 
   void _updateScreenDetails(int selectedItemIndex ){
     setState(() {
       _appBarTitle = bottomAppBarTextList[selectedItemIndex];
+      _currentScreen = screenList[selectedItemIndex];
+
     });
   }
 

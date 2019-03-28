@@ -8,6 +8,6 @@ class TicketsScreen extends StatefulWidget {
 class _TicketsScreenState extends State<TicketsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(child: Text('Tickets'));
   }
 }

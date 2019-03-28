@@ -7,6 +7,6 @@ class ChatsScreen extends StatefulWidget {
 class _ChatsScreenState extends State<ChatsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(child: Text('Chats'),);
   }
 }
