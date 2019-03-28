@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../widgets/bottom_app_bar.dart';
 import '../widgets/theme.dart';
-import 'package:flutter/cupertino.dart';
+import '../screens/events.dart';
+import '../screens/places.dart';
+import '../screens/profile.dart';
+import '../screens/chats.dart';
+import '../screens/tickets.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,10 +26,20 @@ class _HomeScreenState extends State<HomeScreen> {
     'Chats',
     'Tickets'
   ];
-
   String _appBarTitle = bottomAppBarTextList[0];
 
-  void _updateAppBarTitle(int selectedItemIndex ){
+  static List<Widget>screenList = [
+    EventsScreen(),
+    PlacesScreen(),
+    ProfileScreen(),
+    ChatsScreen(),
+    TicketsScreen()
+  ];
+  Widget _currentScreen = ChatsScreen();
+
+
+
+  void _updateScreenDetails(int selectedItemIndex ){
     setState(() {
       _appBarTitle = bottomAppBarTextList[selectedItemIndex];
     });
@@ -48,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: GoTicketsBottomAppBar(
         selectedItemColor: GoTicketsTheme.darkLavender,
         unselectedItemColor: GoTicketsTheme.darkGrey,
-        onItemSelected: _updateAppBarTitle,
+        onItemSelected: _updateScreenDetails,
         bottomAppBarItemData: [
           BottomAppBarItemData(iconData: Icons.party_mode, iconText: bottomAppBarTextList[0]),
           BottomAppBarItemData(iconData: Icons.location_on, iconText: bottomAppBarTextList[1]),
@@ -56,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomAppBarItemData(iconData: Icons.message, iconText: bottomAppBarTextList[3]),
           BottomAppBarItemData(iconData: Icons.party_mode, iconText: bottomAppBarTextList[4])
         ],),
+      body: _currentScreen,
     );
   }
 }
