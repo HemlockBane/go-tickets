@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../models/chat.dart';
+import '../screens/home.dart';
 import '../widgets/theme.dart';
+import './chats/chat_details.dart';
 
 class ChatsScreen extends StatefulWidget {
+
   @override
   _ChatsScreenState createState() => _ChatsScreenState();
 }
 
 class _ChatsScreenState extends State<ChatsScreen> {
+
   @override
   Widget build(BuildContext context) {
     var chatList = ChatHelper.chats();
@@ -32,7 +36,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
       margin: EdgeInsets.only(top: 5.0, bottom: 13.0),
       child: InkWell(
         onTap: (){
-          _onTapListTile();
+          _onTapListTile(context: context, recipientName: name);
         } ,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,8 +59,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
     );
   }
 
-  void _onTapListTile(){
-
+  void _onTapListTile({BuildContext context, String recipientName}){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => ChatDetailsScreen(recipientName: recipientName,)));
   }
 }
 

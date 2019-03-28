@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/cupertino.dart';
 
+
 import '../widgets/bottom_app_bar.dart';
 import '../widgets/theme.dart';
 import '../screens/events.dart';
@@ -19,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   //List titleList = ['ALL', 'FAVORITE', 'MAP'];
 
+
   static List<String>bottomAppBarTextList = [
     'Events',
     'Places',
@@ -26,26 +28,35 @@ class _HomeScreenState extends State<HomeScreen> {
     'Chats',
     'Tickets'
   ];
-  String _appBarTitle = bottomAppBarTextList[0];
+  static String appBarTitle = bottomAppBarTextList[0];
 
-  static List<Widget>screenList = [
+   void updateChatAppBarTitle(String newAppBarTitle){
+    setState(() {
+      appBarTitle = newAppBarTitle;
+    });
+
+  }
+
+  static List<Widget>pageList = [
     EventsScreen(),
     PlacesScreen(),
     ProfileScreen(),
     ChatsScreen(),
     TicketsScreen()
   ];
-  Widget _currentScreen = screenList[0];
+  Widget _currentPage = pageList[0];
 
 
-
-  void _updateScreenDetails(int selectedItemIndex ){
+  void _updateScreenDetails(int selectedItemIndex){
     setState(() {
-      _appBarTitle = bottomAppBarTextList[selectedItemIndex];
-      _currentScreen = screenList[selectedItemIndex];
+      appBarTitle = bottomAppBarTextList[selectedItemIndex];
+      _currentPage = pageList[selectedItemIndex];
 
     });
+
   }
+
+
 
 
   @override
@@ -53,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-            child: Text(_appBarTitle,
+            child: Text(appBarTitle,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.title.copyWith(
               color: Colors.black),
@@ -74,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomAppBarItemData(iconData: Icons.message, iconText: bottomAppBarTextList[3]),
           BottomAppBarItemData(iconData: Icons.party_mode, iconText: bottomAppBarTextList[4])
         ],),
-      body: _currentScreen,
+      body: _currentPage,
     );
   }
 }
