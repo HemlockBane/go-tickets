@@ -15,22 +15,22 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var chatList = ChatHelper.chats();
+    var chatPreviewList = ChatPreviewHelper.chatPreviews();
     return Container(
         width: MediaQuery.of(context).size.width,
         child: ListView.builder(
-            itemCount: chatList.length,
+            itemCount: chatPreviewList.length,
             itemBuilder: (context, rowIterator) {
-              var chatItem = chatList[rowIterator];
+              var chatSnippet = chatPreviewList[rowIterator];
 
-            return chatListTile(
-                name: chatItem.recipientName,
-                lastMessage: chatItem.mostRecentMessage,
-                lastMessageDate: chatItem.mostRecentMessageDate);
+              return chatPreviewListTile(
+                name: chatSnippet.peer,
+                lastMessage: chatSnippet.mostRecentMessage,
+                lastMessageDate: chatSnippet.mostRecentMessageDate);
             }));
   }
 
-  Widget chatListTile({String name, String lastMessage, String lastMessageDate}){
+  Widget chatPreviewListTile({String name, String lastMessage, String lastMessageDate}){
     return Container(
       padding: EdgeInsets.all(6.0),
       margin: EdgeInsets.only(top: 5.0, bottom: 13.0),
