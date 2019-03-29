@@ -25,13 +25,6 @@ class GoTicketsBottomAppBar extends StatefulWidget {
 class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
   int _selectedItemIndex = 0;
 
-  _updateSelectedItemIndex(int newSelectedItemIndex) {
-    widget.onItemSelected(newSelectedItemIndex);
-    setState(() {
-      _selectedItemIndex = newSelectedItemIndex;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -83,4 +76,12 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
       ),
     );
   }
+
+  _updateSelectedItemIndex(int newSelectedItemIndex) {
+    widget.onItemSelected(newSelectedItemIndex);
+    setState(() {
+      _selectedItemIndex = newSelectedItemIndex;
+    });
+  }
+
 }

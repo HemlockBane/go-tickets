@@ -18,8 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //List titleList = ['ALL', 'FAVORITE', 'MAP'];
-
 
   static List<String>bottomAppBarTextList = [
     'Events',
@@ -30,13 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   static String appBarTitle = bottomAppBarTextList[0];
 
-   void updateChatAppBarTitle(String newAppBarTitle){
-    setState(() {
-      appBarTitle = newAppBarTitle;
-    });
-
-  }
-
   static List<Widget>pageList = [
     EventsScreen(),
     PlacesScreen(),
@@ -45,18 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     TicketsScreen()
   ];
   Widget _currentPage = pageList[0];
-
-
-  void _updateScreenDetails(int selectedItemIndex){
-    setState(() {
-      appBarTitle = bottomAppBarTextList[selectedItemIndex];
-      _currentPage = pageList[selectedItemIndex];
-
-    });
-
-  }
-
-
 
 
   @override
@@ -88,4 +67,20 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _currentPage,
     );
   }
+
+  void _updateScreenDetails(int selectedItemIndex){
+    setState(() {
+      appBarTitle = bottomAppBarTextList[selectedItemIndex];
+      _currentPage = pageList[selectedItemIndex];
+
+    });
+  }
+
+  void updateChatAppBarTitle(String newAppBarTitle){
+    setState(() {
+      appBarTitle = newAppBarTitle;
+    });
+
+  }
+
 }
