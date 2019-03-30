@@ -80,6 +80,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   Widget _buildMessageList(){
     var chatList = ChatHelper.chatList;
+    print('chat_details.dart, ln 83: chatlist length is ${chatList.length}');
     return Flexible(
       child: ListView.builder(
           itemCount: chatList.length,

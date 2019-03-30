@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class Chat {
   String peer;
@@ -62,9 +63,9 @@ class ChatPreviewHelper {
 
 class ChatHelper {
 
-  static List<Chat> chatList = List();
   static List<Chat> chats() {
-    chatList
+    List<Chat> chats = List();
+    chats
       ..add(
         Chat(peer: 'Natalie Musalevska', peerId: 1, message: "Hi! What's up?",),
       )..add(
@@ -81,9 +82,12 @@ class ChatHelper {
       Chat(peer: 'Natalie Musalevska', peerId: 1, message: "YOLOYOLO!!",),
     );
 
-
-    return chatList;
+    return chats;
   }
+
+
+  static List<Chat> chatList = chats();
+
 
   static void addChatToList(Chat chat) {
     chatList.add(chat);
