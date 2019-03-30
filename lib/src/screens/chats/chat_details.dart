@@ -16,16 +16,21 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode textFocusNode = FocusNode();
 
+  bool isShowingSmileys = false;
+
 
   @override
   void initState() {
     super.initState();
-    textFocusNode.addListener(onFocusChange);
+    textFocusNode.addListener(_handleKeyboardActiveState);
   }
 
-  void onFocusChange(){
+  /// Hide smileys when keyboard is active
+  void _handleKeyboardActiveState(){
     if(textFocusNode.hasFocus){
-
+      setState(() {
+        isShowingSmileys = false;
+      });
     }
   }
 
@@ -55,7 +60,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         ],
       ),
       body: WillPopScope(
-          onWillPop: (){},
+          onWillPop: () => _handleBackButtonAction(),
           child: Stack(
             children: <Widget>[
               Column(
@@ -68,8 +73,13 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     );
   }
 
+  Future<bool>_handleBackButtonAction(){
+    Navigator.pop(context);
+    return Future.value(false);
+  }
+
   Widget _buildMessageList(){
-    var chatList = ChatHelper.chats();
+    var chatList = ChatHelper.chatList;
     return Flexible(
       child: ListView.builder(
           itemCount: chatList.length,
@@ -89,8 +99,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
         Container(
+          margin: EdgeInsets.symmetric(vertical: 5.0),
           padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-          width: 200.0,
+          width: 300.0,
           child: Text(chat.message,
             style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
           decoration: BoxDecoration(
@@ -104,9 +115,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         children: <Widget>[
           Container(
            color: GoTicketsTheme.darkLavender,
-           margin: EdgeInsets.only(right: chatBubbleSize, ),
+           margin: EdgeInsets.symmetric(vertical: 10.0),
            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-           width: 200.0,
+           width: 300.0,
            child: Text(chat.message,
             style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
 
@@ -131,6 +142,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           Flexible(
             child: Container(
               child: TextField(
+                focusNode: textFocusNode,
+                controller: textEditingController,
                 decoration: InputDecoration.collapsed(
                     hintText: 'Type here...',
                     hintStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
@@ -141,7 +154,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           Material(
             child: Container(
               child: IconButton(
-                  onPressed: (){},
+                  onPressed: () => _handleSendButtonTap(textEditingController.text)
+                   ,
                   icon: Icon(Icons.send, color: GoTicketsTheme.darkGrey,) ),
             ),
             color: Colors.white,
@@ -150,6 +164,30 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       ),
       width: MediaQuery.of(context).size.width,
     );
+  }
+
+  void _handleSendButtonTap(String text){
+    if(text.trim() != ''){
+      // Log chats before adding chat
+      ChatHelper.chats().forEach((chat){
+        print(' chat_details.dart, 171: Before adding chat - ${chat.message}');
+      });
+
+      ChatHelper.addChatToList(
+          Chat(peer: 'Me', peerId: 0, message: text));
+
+      textEditingController.clear();
+
+      // Log chats after adding chat
+      ChatHelper.chats().forEach((chat){
+        print(' chat_details.dart, 180: After adding chat - ${chat.message}');
+      });
+      setState(() {
+
+      });
+    }else{
+      print('Empty string in text field');
+    }
   }
 
 }

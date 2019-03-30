@@ -61,9 +61,10 @@ class ChatPreviewHelper {
 
 
 class ChatHelper {
+
+  static List<Chat> chatList = List();
   static List<Chat> chats() {
-    List<Chat> chats = List();
-    chats
+    chatList
       ..add(
         Chat(peer: 'Natalie Musalevska', peerId: 1, message: "Hi! What's up?",),
       )..add(
@@ -73,7 +74,7 @@ class ChatHelper {
     )..add(
       Chat(peer: 'Me', peerId: 0, message: "Haven't seen you for ages!(",),
     )..add(
-      Chat(peer: 'Natalie Musalevska', peerId: 1, message: "I came back from yesterday",),
+      Chat(peer: 'Natalie Musalevska', peerId: 1, message: "I came back from France yesterday",),
     )..add(
       Chat(peer: 'Natalie Musalevska', peerId: 1, message: "Need to get down now",),
     )..add(
@@ -81,10 +82,10 @@ class ChatHelper {
     );
 
 
-    return chats;
+    return chatList;
   }
 
-  Chat getChatItemAtIndex(int position) {
-    return chats()[position];
+  static void addChatToList(Chat chat) {
+    chatList.add(chat);
   }
 }
