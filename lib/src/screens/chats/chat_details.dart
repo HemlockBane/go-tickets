@@ -93,20 +93,19 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   }
 
   Widget _buildChatItem({Chat chat}){
-    var chatBubbleSize = MediaQuery.of(context).size.width/4;
     // If the chat was sent by the user, align to the right
     if(chat.peerId == 0){
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
         Container(
-          margin: EdgeInsets.symmetric(vertical: 5.0),
-          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-          width: 300.0,
+          margin: EdgeInsets.only(top: 2.5, bottom: 2.5, right: 10.0),
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
           child: Text(chat.message,
             style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
           decoration: BoxDecoration(
               color: GoTicketsTheme.lightLavender,
+            borderRadius: BorderRadius.all(Radius.circular(5.0))
           ),
         )
       ],);
@@ -115,10 +114,12 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-           color: GoTicketsTheme.darkLavender,
-           margin: EdgeInsets.symmetric(vertical: 10.0),
-           padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-           width: 300.0,
+           margin: EdgeInsets.only(top: 2.5, bottom: 2.5, left: 10.0),
+           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+           decoration: BoxDecoration(
+             color: GoTicketsTheme.darkLavender,
+             borderRadius: BorderRadius.all(Radius.circular(5.0))
+           ),
            child: Text(chat.message,
             style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
 
@@ -149,14 +150,12 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     hintText: 'Type here...',
                     hintStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
               ),
-
             ),
           ),
           Material(
             child: Container(
               child: IconButton(
-                  onPressed: () => _handleSendButtonTap(textEditingController.text)
-                   ,
+                  onPressed: () => _handleSendButtonTap(textEditingController.text),
                   icon: Icon(Icons.send, color: GoTicketsTheme.darkGrey,) ),
             ),
             color: Colors.white,

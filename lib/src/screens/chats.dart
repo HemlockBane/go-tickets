@@ -33,7 +33,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
   Widget chatPreviewListTile({String name, String lastMessage, String lastMessageDate}){
     return Container(
       padding: EdgeInsets.all(6.0),
-      margin: EdgeInsets.only(top: 5.0, bottom: 13.0),
+      margin: EdgeInsets.only(top: 5.0, bottom: 13.0, left: 4),
       child: InkWell(
         onTap: (){
           _onTapListTile(context: context, recipientName: name);
@@ -41,18 +41,28 @@ class _ChatsScreenState extends State<ChatsScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-          Container(padding: EdgeInsets.all(5.0),
+          Container(//padding: EdgeInsets.all(5.0),
+            margin: EdgeInsets.only(right: 10),
               child: CircleAvatar()),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                Text(name),
-                Text(lastMessageDate)
-              ],
+              Container(
+                width: MediaQuery.of(context).size.width/1.25,
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                  Container(padding: EdgeInsets.only(bottom: 5.0),child: Text(name)),
+                  Text(lastMessageDate, style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey, fontSize: 14),
+                    overflow: TextOverflow.ellipsis,)
+                ],
+                ),
               ),
-              Text(lastMessage)
+              Row(
+                children: <Widget>[
+                  Text(lastMessage),
+                  Container()
+                ],
+              )
           ],),
         ],),
       ),
