@@ -23,35 +23,35 @@ class _ChatsScreenState extends State<ChatsScreen> {
             itemBuilder: (context, rowIterator) {
               var chatSnippet = chatPreviewList[rowIterator];
 
-              Color color;
-              color = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
+              Color bubbleIndicatorColor;
+              bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
 
               return chatPreviewListTile(
                 name: chatSnippet.peer,
                 lastMessage: chatSnippet.mostRecentMessage,
                 lastMessageDate: chatSnippet.mostRecentMessageDate,
-                color: color);
+                color: bubbleIndicatorColor);
             }));
   }
 
   Color _setOnlineIndicatorColor({int colorCode}){
-    Color color;
+    Color indicatorColor;
     switch(colorCode){
       case 0:
-        color = Colors.green;
+        indicatorColor = Colors.green;
             break;
       case 1:
-        color = Colors.yellow.shade600;
+        indicatorColor = Colors.yellow.shade600;
         break;
       case 2:
-        color = Colors.grey.shade300;
+        indicatorColor = Colors.grey.shade500;
         break;
       case 3:
-        color = Colors.red;
+        indicatorColor = Colors.red;
         break;
     }
 
-    return color;
+    return indicatorColor;
   }
 
   Widget chatPreviewListTile({String name, String lastMessage, String lastMessageDate, Color color}){

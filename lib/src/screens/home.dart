@@ -58,11 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
         unselectedItemColor: GoTicketsTheme.darkGrey,
         onItemSelected: _updateScreenDetails,
         bottomAppBarItemData: [
-          BottomAppBarItemData(iconData: Icons.party_mode, iconText: bottomAppBarTextList[0]),
+          BottomAppBarItemData(iconData: FontAwesomeIcons.glassCheers, iconText: bottomAppBarTextList[0]),
           BottomAppBarItemData(iconData: Icons.location_on, iconText: bottomAppBarTextList[1]),
           BottomAppBarItemData(iconData: FontAwesomeIcons.user, iconText: bottomAppBarTextList[2]),
-          BottomAppBarItemData(iconData: Icons.message, iconText: bottomAppBarTextList[3]),
-          BottomAppBarItemData(iconData: Icons.party_mode, iconText: bottomAppBarTextList[4])
+          BottomAppBarItemData(iconData: CupertinoIcons.conversation_bubble, iconText: bottomAppBarTextList[3]),
+          BottomAppBarItemData(iconData: Icons.description, iconText: bottomAppBarTextList[4])
         ],),
       body: _currentPage,
     );
