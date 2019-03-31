@@ -18,13 +18,13 @@ class ChatPreview{
   String peer;
   String mostRecentMessage;
   String mostRecentMessageDate;
-  String unreadMessageCount;
+  int isAvailable; // 0 for active, 1 for online but not active, 2 for busy, 3 for away
 
   ChatPreview(
       {this.peer,
         this.mostRecentMessage,
         this.mostRecentMessageDate,
-        this.unreadMessageCount});
+        this.isAvailable});
 }
 
 class ChatPreviewHelper {
@@ -32,29 +32,29 @@ class ChatPreviewHelper {
     List<ChatPreview> chatPreviews = List();
     chatPreviews
       ..add(
-        ChatPreview(peer: 'Jasmine N', mostRecentMessage: '^_^', mostRecentMessageDate: '2 min'),
+        ChatPreview(peer: 'Jasmine N', mostRecentMessage: '^_^', mostRecentMessageDate: '2 min', isAvailable: 0),
       )
       ..add(ChatPreview(
-          peer: 'Natalie Musalevska', mostRecentMessage: 'YOLOYOLO!', mostRecentMessageDate: '13 min'))
+          peer: 'Natalie Musalevska', mostRecentMessage: 'YOLOYOLO!', mostRecentMessageDate: '13 min', isAvailable: 1))
       ..add(ChatPreview(
           peer: 'Yuri Zverev',
-          mostRecentMessage: "No, I won't be able to join you tonight", mostRecentMessageDate: '5 h'))
+          mostRecentMessage: "No, I won't be able to join you tonight", mostRecentMessageDate: '5 h', isAvailable: 2))
       ..add(ChatPreview(
           peer: 'Habibullo Abdusamatov',
           mostRecentMessage: 'Ok, dude!',
-          mostRecentMessageDate: '5 h'))
+          mostRecentMessageDate: '5 h', isAvailable: 2))
       ..add(ChatPreview(
           peer: 'Alex',
           mostRecentMessage: "I'm writing to you to voice my opinion in the ",
-          mostRecentMessageDate: 'today 6 p.m.'))
+          mostRecentMessageDate: 'today 6 p.m.', isAvailable: 0))
       ..add(ChatPreview(
           peer: 'John Doe',
           mostRecentMessage: 'His understanding of what constitutes good',
-          mostRecentMessageDate: 'today 3 p.m.'))
+          mostRecentMessageDate: 'today 3 p.m.', isAvailable: 0))
       ..add(ChatPreview(
           peer: 'Zephyr',
           mostRecentMessage: 'His understanding of what constitutes good',
-          mostRecentMessageDate: 'today 2 p.m.'));
+          mostRecentMessageDate: 'today 2 p.m.', isAvailable: 3));
 
     return chatPreviews;
   }
