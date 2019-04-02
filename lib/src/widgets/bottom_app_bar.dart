@@ -57,7 +57,8 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
         ? widget.selectedItemColor
         : widget.unselectedItemColor;
 
-    return Material(color: Colors.transparent,
+    return Material(
+      color: Colors.transparent,
       child: InkWell(
         highlightColor: Colors.white,
         child: Column(
@@ -86,3 +87,4 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
   }
 
 }
+

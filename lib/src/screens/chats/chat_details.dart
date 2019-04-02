@@ -80,7 +80,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   Widget _buildMessageList(){
     var chatList = ChatHelper.chatList;
-    print('chat_details.dart, ln 83: chatlist length is ${chatList.length}');
+    //print('chat_details.dart, ln 83: chatlist length is ${chatList.length}');
     return Flexible(
       child: ListView.builder(
           itemCount: chatList.length,
@@ -101,6 +101,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         Container(
           margin: EdgeInsets.only(top: 2.5, bottom: 2.5, right: 10.0),
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+          constraints: BoxConstraints(maxWidth: 300),
           child: Text(chat.message,
             style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
           decoration: BoxDecoration(
@@ -146,6 +147,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               child: TextField(
                 focusNode: textFocusNode,
                 controller: textEditingController,
+                textInputAction: TextInputAction.newline,
                 decoration: InputDecoration.collapsed(
                     hintText: 'Type here...',
                     hintStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
