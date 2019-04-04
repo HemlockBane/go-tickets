@@ -22,11 +22,15 @@ class DrawerItemData{
 class GoTicketsAppDrawer extends StatefulWidget {
 final Color selectedItemColor;
 final Color unselectedItemColor;
+int selectedDrawerItemIndex;
+ValueChanged<int> onDrawerItemPressed;
 
 
 GoTicketsAppDrawer({
   this.selectedItemColor,
-  this.unselectedItemColor});
+  this.unselectedItemColor,
+  this.selectedDrawerItemIndex,
+  this.onDrawerItemPressed});
 
 List<DrawerItemData> drawerItemDataList = [
   DrawerItemData(isDrawerHeader: true,),
@@ -42,7 +46,6 @@ List<DrawerItemData> drawerItemDataList = [
 }
 
 class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
-  int _selectedDrawerItemIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -59,7 +62,7 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
       return _buildTabBarItem(
           drawerItemData: widget.drawerItemDataList[itemDataIndex],
           itemIndex: itemDataIndex,
-          onItemPressed: _updateSelectedItemIndex);
+          onDrawerItemPressed: widget.onDrawerItemPressed);
     });
 
     return itemList;
@@ -68,15 +71,15 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
   Widget _buildTabBarItem(
       {DrawerItemData drawerItemData,
         int itemIndex,
-        ValueChanged<int> onItemPressed}) {
-    Color itemColor = _selectedDrawerItemIndex == itemIndex
+        ValueChanged<int> onDrawerItemPressed}) {
+    Color itemColor = widget.selectedDrawerItemIndex == itemIndex
         ? widget.selectedItemColor
         : widget.unselectedItemColor;
 
     if(drawerItemData.isDrawerHeader){
       return UserAccountsDrawerHeader(
         accountName: Text('Obinna Igwe', style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkLavender),),
-        accountEmail: Text('igwenus619@gmail.com', style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.lightLavender)),
+        accountEmail: Text('igwenus619@gmail.com', style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey)),
         currentAccountPicture: CircleAvatar(
           backgroundColor: GoTicketsTheme.darkLavender,
           child: Text('OB'),),
@@ -87,7 +90,7 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
           leading: Icon(drawerItemData.listTileIcon, color: itemColor,),
           title: Text(drawerItemData.listTileString, style: Theme.of(context).textTheme.body1.copyWith(color: itemColor),),),
         onTap: (){
-          onItemPressed(itemIndex);
+          onDrawerItemPressed(itemIndex);
         },
       );
 
@@ -95,12 +98,6 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
 
   }
 
-  _updateSelectedItemIndex(int newSelectedItemIndex) {
-    setState(() {
-      _selectedDrawerItemIndex = newSelectedItemIndex;
-
-    });
-  }
 
 
 

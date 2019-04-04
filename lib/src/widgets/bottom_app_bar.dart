@@ -83,6 +83,7 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
     // Update screen details in home page
     widget.onItemSelected(newSelectedItemIndex);
 
+    // Update currently item index
     setState(() {
       _selectedItemIndex = newSelectedItemIndex;
     });

@@ -38,13 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   Widget _currentPage = pageList[0];
 
+  int _selectedDrawerItemIndex = 1;
+  //static int get selectedDrawerItemIndex => _selectedDrawerItemIndex;
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: GoTicketsAppDrawer(
         selectedItemColor: GoTicketsTheme.darkLavender,
-        unselectedItemColor: GoTicketsTheme.darkGrey,),
+        unselectedItemColor: GoTicketsTheme.darkGrey,
+        selectedDrawerItemIndex: _selectedDrawerItemIndex,
+      onDrawerItemPressed: _updateSelectedDrawerItemIndex,),
       appBar: AppBar(
         title: Center(
             child: Text(appBarTitle,
@@ -85,5 +91,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
   }
+
+  _updateSelectedDrawerItemIndex(int newSelectedItemIndex) {
+    setState(() {
+      _selectedDrawerItemIndex = newSelectedItemIndex;
+
+    });
+  }
+
 
 }
