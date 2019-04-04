@@ -95,15 +95,6 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
       );
 
     }
-
   }
-
-
-
-
-
-
-
-
 
 }

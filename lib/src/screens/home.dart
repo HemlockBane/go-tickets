@@ -38,8 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   Widget _currentPage = pageList[0];
 
-  int _selectedDrawerItemIndex = 1;
-  //static int get selectedDrawerItemIndex => _selectedDrawerItemIndex;
+  static int _selectedDrawerItemIndex = 1; // ListTile items index begin from 1
+  static int _selectedBottomBarItemIndex = _selectedDrawerItemIndex - 1;
 
 
 
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: GoTicketsTheme.darkLavender,
         unselectedItemColor: GoTicketsTheme.darkGrey,
         selectedDrawerItemIndex: _selectedDrawerItemIndex,
-      onDrawerItemPressed: _updateSelectedDrawerItemIndex,),
+      onDrawerItemPressed: _handleDrawerItemPressed,),
       appBar: AppBar(
         title: Center(
             child: Text(appBarTitle,
@@ -64,8 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: GoTicketsBottomAppBar(
         selectedItemColor: GoTicketsTheme.darkLavender,
+        selectedItemIndex: _selectedBottomBarItemIndex,
         unselectedItemColor: GoTicketsTheme.darkGrey,
-        onItemSelected: _updateScreenDetails,
+        onItemSelected: _handleBottomBarItemPressed,
         bottomAppBarItemData: [
           BottomAppBarItemData(iconData: FontAwesomeIcons.glassCheers, iconText: bottomAppBarTextList[0]),
           BottomAppBarItemData(iconData: Icons.location_on, iconText: bottomAppBarTextList[1]),
@@ -77,10 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _updateScreenDetails(int selectedItemIndex){
+  void _handleBottomBarItemPressed(int newSelectedItemIndex){
     setState(() {
-      appBarTitle = bottomAppBarTextList[selectedItemIndex];
-      _currentPage = pageList[selectedItemIndex];
+      _selectedBottomBarItemIndex = newSelectedItemIndex;
+      _selectedDrawerItemIndex = _selectedBottomBarItemIndex + 1;
+
+      appBarTitle = bottomAppBarTextList[newSelectedItemIndex];
+      _currentPage = pageList[newSelectedItemIndex];
+
+
 
     });
   }
@@ -92,9 +98,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
-  _updateSelectedDrawerItemIndex(int newSelectedItemIndex) {
+  _handleDrawerItemPressed(int newSelectedItemIndex) {
     setState(() {
+      // Update selected drawer item index
       _selectedDrawerItemIndex = newSelectedItemIndex;
+      // Update selected bottom bar item index
+      _selectedBottomBarItemIndex = _selectedDrawerItemIndex - 1; // bottom bar item indices and pageList item indices are behind drawer item indices by 1
+
+      // Update selected page in home screen
+      _currentPage = pageList[_selectedBottomBarItemIndex];
 
     });
   }

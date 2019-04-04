@@ -9,21 +9,23 @@ class BottomAppBarItemData {
 
 class GoTicketsBottomAppBar extends StatefulWidget {
   final List<BottomAppBarItemData> bottomAppBarItemData;
+  int selectedItemIndex;
   final Color selectedItemColor;
   final Color unselectedItemColor;
   final ValueChanged<int> onItemSelected;
 
-  GoTicketsBottomAppBar(
-      {this.bottomAppBarItemData,
-      this.unselectedItemColor,
-      this.selectedItemColor,
-      this.onItemSelected});
+  GoTicketsBottomAppBar({
+    this.bottomAppBarItemData,
+    this.selectedItemIndex,
+    this.unselectedItemColor,
+    this.selectedItemColor,
+    this.onItemSelected});
   @override
   _GoTicketsBottomAppBarState createState() => _GoTicketsBottomAppBarState();
 }
 
 class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
-  int _selectedItemIndex = 0;
+  //int _selectedItemIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
       {BottomAppBarItemData appBarItemData,
       int itemIndex,
       ValueChanged<int> onItemPressed}) {
-    Color itemColor = _selectedItemIndex == itemIndex
+    Color itemColor = widget.selectedItemIndex == itemIndex
         ? widget.selectedItemColor
         : widget.unselectedItemColor;
 
@@ -83,9 +85,10 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
     // Update screen details in home page
     widget.onItemSelected(newSelectedItemIndex);
 
-    // Update currently item index
+    // Update currently selected item index
     setState(() {
-      _selectedItemIndex = newSelectedItemIndex;
+      widget.selectedItemIndex = newSelectedItemIndex;
+      print('currently selected bottom bar item index is ${widget.selectedItemIndex}');
     });
   }
 
