@@ -25,7 +25,6 @@ class GoTicketsBottomAppBar extends StatefulWidget {
 }
 
 class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
-  //int _selectedItemIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +87,6 @@ class _GoTicketsBottomAppBarState extends State<GoTicketsBottomAppBar> {
     // Update currently selected item index
     setState(() {
       widget.selectedItemIndex = newSelectedItemIndex;
-      print('currently selected bottom bar item index is ${widget.selectedItemIndex}');
     });
   }
 

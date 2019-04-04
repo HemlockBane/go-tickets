@@ -3,12 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'theme.dart';
-import '../screens/home.dart';
-import '../screens/events.dart';
-import '../screens/places.dart';
-import '../screens/profile.dart';
-import '../screens/chats.dart';
-import '../screens/tickets.dart';
 
 class DrawerItemData{
   IconData listTileIcon;
