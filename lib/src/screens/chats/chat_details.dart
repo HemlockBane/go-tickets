@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:go_tickets/src/widgets/theme.dart';
 import 'package:go_tickets/src/models/chat.dart';
@@ -87,47 +88,76 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           itemBuilder: (context, rowIterator){
             var chat = chatList[rowIterator];
 
-            return _buildChatItem(chat: chat);
+            return _buildChatItem(chat: chat, chatList: chatList, chatIndex: rowIterator);
       }),
     );
   }
 
-  Widget _buildChatItem({Chat chat}){
+  Widget _buildChatItem({Chat chat, List<Chat> chatList, int chatIndex}){
     // If the chat was sent by the user, align to the right
     if(chat.peerId == 0){
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+      return Column(
         children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 2.5, bottom: 2.5, right: 10.0),
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-          constraints: BoxConstraints(maxWidth: 300),
-          child: Text(chat.message,
-            style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
-          decoration: BoxDecoration(
-              color: GoTicketsTheme.lightLavender,
-            borderRadius: BorderRadius.all(Radius.circular(5.0))
-          ),
-        )
+          isAfterLastLeftMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date sent') : Container(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 2.5,
+                    bottom: isAfterLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? 10 : 2.5,
+                    right: 10.0),
+                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                constraints: BoxConstraints(maxWidth: 300),
+                child: Text(chat.message,
+                  style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
+                decoration: BoxDecoration(
+                  color: GoTicketsTheme.lightLavender,
+                  borderRadius: BorderRadius.all(Radius.circular(5.0))
+            ),
+          )
+        ],),
+
+
       ],);
     }else{
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      return Column(
         children: <Widget>[
-          Container(
-           margin: EdgeInsets.only(top: 2.5, bottom: 2.5, left: 10.0),
-           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-           decoration: BoxDecoration(
-             color: GoTicketsTheme.darkLavender,
-             borderRadius: BorderRadius.all(Radius.circular(5.0))
-           ),
-           child: Text(chat.message,
-            style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
+          isAfterLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date sent') : Container(),
+          Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 2.5, bottom: 2.5, left: 10.0),
+                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                decoration: BoxDecoration(
+                    color: GoTicketsTheme.darkLavender,
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))
+                ),
+                child: Text(chat.message,
+                  style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
 
-        )],
-      );
+              )],
+          ),
+          //isLastReceivedMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date Received') : Container()
+
+      ],);
     }
 
+  }
+
+  bool isAfterLastRightMessage({int chatIndex, List<Chat>chatList}){
+    if((chatIndex > 0 && chatList != null && chatList[chatIndex - 1].peerId == 0 || chatIndex == 0)){
+      return true;
+    }
+    else
+      return false;
+  }
+
+  bool isAfterLastLeftMessage({int chatIndex, List<Chat>chatList}){
+    if((chatIndex > 0 && chatList != null && chatList[chatIndex - 1].peerId == 1 || chatIndex == 0))
+      return true;
+    else
+      return false;
   }
 
   Widget _buildTextInputBar(){
@@ -172,7 +202,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     if(text.trim() != ''){
       // Log chats before adding chat
       ChatHelper.chats().forEach((chat){
-        print(' chat_details.dart, 171: Before adding chat - ${chat.message}');
+        //print(' chat_details.dart, 171: Before adding chat - ${chat.message}');
       });
 
       ChatHelper.addChatToList(

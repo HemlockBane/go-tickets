@@ -19,6 +19,7 @@ class GoTicketsTheme{
     return baseTheme.copyWith(
       primaryColor: Colors.white,
       primaryColorLight: lightLavender,
+      primaryIconTheme: IconThemeData(color: darkLavender),
       scaffoldBackgroundColor: Colors.white,
       textTheme: baseTheme.textTheme.copyWith(
       title: baseTheme.textTheme.title.copyWith(

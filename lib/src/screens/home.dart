@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../widgets/bottom_app_bar.dart';
 import '../widgets/theme.dart';
+import '../widgets/drawer.dart';
 import '../screens/events.dart';
 import '../screens/places.dart';
 import '../screens/profile.dart';
@@ -41,6 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: GoTicketsAppDrawer(
+        selectedItemColor: GoTicketsTheme.darkLavender,
+        unselectedItemColor: GoTicketsTheme.darkGrey,),
       appBar: AppBar(
         title: Center(
             child: Text(appBarTitle,
@@ -48,9 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
           style: Theme.of(context).textTheme.title.copyWith(
               color: Colors.black),
         )),
-        leading: IconButton(icon: Icon(Icons.menu, color: GoTicketsTheme.darkLavender,), onPressed: () {}),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.search, color: GoTicketsTheme.darkLavender,), onPressed: () {})
+          IconButton(icon: Icon(Icons.search,), onPressed: () {})
         ],
       ),
       bottomNavigationBar: GoTicketsBottomAppBar(
