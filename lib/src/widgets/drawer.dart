@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'theme.dart';
+import '../models/models.dart';
 
 class DrawerItemData{
   IconData listTileIcon;
@@ -71,12 +73,18 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
         : widget.unselectedItemColor;
 
     if(drawerItemData.isDrawerHeader){
-      return UserAccountsDrawerHeader(
-        accountName: Text('Obinna Igwe', style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkLavender),),
-        accountEmail: Text('igwenus619@gmail.com', style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey)),
-        currentAccountPicture: CircleAvatar(
-          backgroundColor: GoTicketsTheme.darkLavender,
-          child: Text('OB'),),
+      return Container(
+          child: ScopedModelDescendant<UserModel>(
+              builder: (context, widget, userModel){
+                return UserAccountsDrawerHeader(
+                  accountName: Text(
+                    userModel.profile.displayName, style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkLavender),),
+                  accountEmail: Text(
+                      userModel.profile.email, style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey)),
+                  currentAccountPicture: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.profile.profilePictureUrl)),
+                );
+              })
       );
     }else{
       return InkWell(

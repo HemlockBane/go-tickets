@@ -53,6 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   void login(BuildContext context){
-    UserModel.signIn(context);
+    UserModel.of(context).signIn();
   }
 }
