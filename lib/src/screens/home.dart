@@ -14,6 +14,7 @@ import '../screens/tickets.dart';
 
 
 class HomeScreen extends StatefulWidget {
+  static final routeName = 'home';
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

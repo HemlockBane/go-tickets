@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../src/screens/home.dart';
+import '../src/screens/login.dart';
 import '../src/widgets/theme.dart';
 
 class App extends StatelessWidget {
@@ -9,7 +10,11 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: GoTicketsTheme().getAppTheme(),
-      home: HomeScreen(),
+      home: LoginScreen(),
+      routes: <String, WidgetBuilder>{
+        LoginScreen.routeName: (BuildContext context) => LoginScreen(),
+        HomeScreen.routeName: (BuildContext context) => HomeScreen()
+    },
     );
   }
 }
