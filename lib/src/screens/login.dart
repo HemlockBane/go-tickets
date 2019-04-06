@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../widgets/theme.dart';
 import '../models/models.dart';
@@ -53,6 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   void login(BuildContext context){
-    UserModel.of(context).signIn();
+    UserModel.of(context).signIn().then((FirebaseUser firebaseUser){
+    }).catchError((error){
+      print('login.dart, ln 60: Login error - $error');
+    });
   }
 }

@@ -78,9 +78,11 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
               builder: (context, widget, userModel){
                 return UserAccountsDrawerHeader(
                   accountName: Text(
-                    userModel.profile.displayName, style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkLavender),),
+                    userModel.profile.displayName,
+                    style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkLavender),),
                   accountEmail: Text(
-                      userModel.profile.email, style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey)),
+                      userModel.profile.email,
+                      style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey)),
                   currentAccountPicture: CircleAvatar(
                       backgroundImage: NetworkImage(userModel.profile.profilePictureUrl)),
                 );
@@ -90,7 +92,8 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
       return InkWell(
         child: ListTile(
           leading: Icon(drawerItemData.listTileIcon, color: itemColor,),
-          title: Text(drawerItemData.listTileString, style: Theme.of(context).textTheme.body1.copyWith(color: itemColor),),),
+          title: Text(drawerItemData.listTileString,
+            style: Theme.of(context).textTheme.body1.copyWith(color: itemColor),),),
         onTap: (){
           onDrawerItemPressed(itemIndex);
         },

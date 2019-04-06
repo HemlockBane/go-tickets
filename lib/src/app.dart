@@ -19,7 +19,7 @@ class App extends StatelessWidget {
           title: 'GoTickets',
           theme: GoTicketsTheme().getAppTheme(),
           home: ScopedModelDescendant<UserModel>(builder: (context, child, userModel){
-            if (userModel.isLoggedIn){
+            if (userModel.isSignedIn){
               print('app.dart, ln 23: is logged in');
               return HomeScreen();
 

@@ -2,77 +2,61 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../screens/home.dart';
 
 class UserModel extends Model {
   GoogleSignInAccount _currentUser;
   GoogleSignIn _googleSignIn;
+
+  FirebaseAuth _firebaseAuth;
+  FirebaseUser _firebaseUser;
+
   Profile profile;
-  bool _isLoggedIn = false;
 
-  bool get isLoggedIn {
-    _googleSignIn.isSignedIn().then((value){
-      _isLoggedIn = value;
-    });
-    return _isLoggedIn;
+  bool get isSignedIn {
+    print('models.dart, ln 21: Is signed in - ${_firebaseUser != null}');
+    return _firebaseUser != null;
   }
-
-
 
   static UserModel of(BuildContext context) =>
       ScopedModel.of<UserModel>(context, rebuildOnChange: true);
 
   initialise() {
-    _googleSignIn = GoogleSignIn(scopes: <String>[
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ]);
+    _googleSignIn = GoogleSignIn();
+    _firebaseAuth = FirebaseAuth.instance;
 
-
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
-      _currentUser = account;
-
-      if (_currentUser != null) {
-        print('authenticated');
-      }
-      if (_currentUser == null) {
-        print('unauthenticated');
-      }
-
-      _googleSignIn.signInSilently();
-      notifyListeners();
-    });
     return this;
   }
 
-
-  _loadProfileData(){
-
-    if(isLoggedIn){
-      var userDetails = _currentUser;
+  _loadUserData({FirebaseUser firebaseUser}) {
+    if (isSignedIn) {
       profile = Profile.initialise(
-          id: userDetails.id,
-          displayName: userDetails.displayName,
-          email: userDetails.email,
-          profilePictureUrl: userDetails.photoUrl,
+          displayName: firebaseUser.displayName,
+          email: firebaseUser.email,
+          profilePictureUrl: firebaseUser.photoUrl,
           notifyListeners: notifyListeners);
 
-      print(profile.toString());
+      //print('models.dart, ln 43: ${profile.toString()}');
     }
   }
 
-  Future signIn() async {
-    await _googleSignIn.signIn();
-    _currentUser = _googleSignIn.currentUser;
+  Future<FirebaseUser> signIn() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-    if(_currentUser != null){
-      _currentUser.authentication.then((authentication){
-        _loadProfileData();
-      });
+    final AuthCredential authCredential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-    }
-    //notifyListeners();
+    _firebaseUser = await _firebaseAuth.signInWithCredential(authCredential);
+    _loadUserData(firebaseUser: _firebaseUser);
 
+    notifyListeners();
+    return _firebaseUser;
   }
 }
 
@@ -98,7 +82,6 @@ class Profile {
 
   @override
   String toString() {
-    // TODO: implement toString
     return 'Profile is: $displayName - $email';
   }
 }
