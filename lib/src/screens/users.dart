@@ -14,7 +14,10 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Users',),),
+      appBar: AppBar(
+        title: Center(
+            child: Text(
+              'Users', style: Theme.of(context).textTheme.title,)),),
       body: Container(
         child: StreamBuilder(
             stream: Firestore.instance.collection('users').snapshots(),
@@ -49,8 +52,10 @@ class _UsersScreenState extends State<UsersScreen> {
       return ListTile(
         leading: user.profilePictureUrl != "" || user.profilePictureUrl != " "
             ? CircleAvatar(backgroundImage: NetworkImage(user.profilePictureUrl),)
-            : CircleAvatar(child: Text('OB'),),
-        title: Text(user.displayName),
+            : CircleAvatar(
+          backgroundColor: Colors.black,
+          child: Text('OB', style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white),),),
+        title: Text(user.displayName, style: Theme.of(context).textTheme.body1,),
         onTap: (){
           _handleTileTap(context: context, chatBuddy: user);
         },

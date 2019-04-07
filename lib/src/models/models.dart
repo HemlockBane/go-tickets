@@ -15,10 +15,15 @@ class UserModel extends Model {
   FirebaseUser _firebaseUser;
 
   User user;
+  bool _isConnecting = false;
 
   bool get isSignedIn {
     print('models.dart, ln 21: Is signed in - ${_firebaseUser != null}');
     return _firebaseUser != null;
+  }
+
+  bool get isConnecting{
+    return _isConnecting;
   }
 
   static UserModel of(BuildContext context) =>
@@ -43,17 +48,31 @@ class UserModel extends Model {
     }
   }
 
+  _connecting({bool isConnecting = true}){
+    _isConnecting = isConnecting;
+    notifyListeners();
+  }
+
+
   Future<FirebaseUser> signIn() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    _connecting();
 
-    final AuthCredential authCredential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+    try{
+      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    _firebaseUser = await _firebaseAuth.signInWithCredential(authCredential);
-    _loadUserData(firebaseUser: _firebaseUser);
+      final AuthCredential authCredential = GoogleAuthProvider.getCredential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      _firebaseUser = await _firebaseAuth.signInWithCredential(authCredential);
+      _loadUserData(firebaseUser: _firebaseUser);
+    }catch(error){
+      _connecting(isConnecting: false);
+      print('models.dart: ln 73 : error signing in: $error');
+    }
+
 
     if (_firebaseUser != null) {
       // Check if user is registered
