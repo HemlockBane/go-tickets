@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/chat.dart';
 import '../screens/home.dart';
+import '../screens/users.dart';
 import '../widgets/theme.dart';
 import './chats/chat_details.dart';
 
@@ -16,22 +17,29 @@ class _ChatsScreenState extends State<ChatsScreen> {
   @override
   Widget build(BuildContext context) {
     var chatPreviewList = ChatPreviewHelper.chatPreviews();
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-            itemCount: chatPreviewList.length,
-            itemBuilder: (context, rowIterator) {
-              var chatSnippet = chatPreviewList[rowIterator];
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.chat_bubble),
+          onPressed: (){
+            _handleFloatingActionButtonTap(context: context);
+          }),
+      body: Container(
+          width: MediaQuery.of(context).size.width,
+          child: ListView.builder(
+              itemCount: chatPreviewList.length,
+              itemBuilder: (context, rowIterator) {
+                var chatSnippet = chatPreviewList[rowIterator];
 
-              Color bubbleIndicatorColor;
-              bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
+                Color bubbleIndicatorColor;
+                bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
 
-              return chatPreviewListTile(
-                name: chatSnippet.peer,
-                lastMessage: chatSnippet.mostRecentMessage,
-                lastMessageDate: chatSnippet.mostRecentMessageDate,
-                color: bubbleIndicatorColor);
-            }));
+                return chatPreviewListTile(
+                  name: chatSnippet.peer,
+                  lastMessage: chatSnippet.mostRecentMessage,
+                  lastMessageDate: chatSnippet.mostRecentMessageDate,
+                  color: bubbleIndicatorColor);
+              })),
+    );
   }
 
   Color _setOnlineIndicatorColor({int colorCode}){
@@ -60,7 +68,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
       margin: EdgeInsets.only(top: 11.0, bottom: 16.0, left: 4),
       child: InkWell(
         onTap: (){
-          _onTapListTile(context: context, recipientName: name);
+          _handleListTileTap(context: context, recipientName: name);
         } ,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,9 +125,20 @@ class _ChatsScreenState extends State<ChatsScreen> {
     );
   }
 
-  void _onTapListTile({BuildContext context, String recipientName}){
+  void _handleListTileTap({BuildContext context, String recipientName}){
     Navigator.push(context, MaterialPageRoute(
-        builder: (context) => ChatDetailsScreen(recipientName: recipientName,)));
+        builder: (context) => ChatDetailsScreen(
+          recipientName: recipientName,),
+      ),
+    );
   }
+
+  void _handleFloatingActionButtonTap({BuildContext context}){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => UsersScreen(),
+      ),
+    );
+  }
+
 }
 
