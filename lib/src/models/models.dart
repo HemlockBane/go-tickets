@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../screens/home.dart';
 
@@ -44,8 +45,7 @@ class UserModel extends Model {
 
   Future<FirebaseUser> signIn() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
     final AuthCredential authCredential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
@@ -54,6 +54,28 @@ class UserModel extends Model {
 
     _firebaseUser = await _firebaseAuth.signInWithCredential(authCredential);
     _loadUserData(firebaseUser: _firebaseUser);
+
+    if (_firebaseUser != null) {
+      // Check if user is registered
+      final QuerySnapshot result = await Firestore.instance
+          .collection('users')
+          .where('id', isEqualTo: _firebaseUser.uid)
+          .getDocuments();
+
+      final List<DocumentSnapshot> documents = result.documents;
+
+      // Register the user if they are not registered
+      if (documents.length == 0) {
+        Firestore.instance
+            .collection('users')
+            .document(_firebaseUser.uid)
+            .setData({
+          'username': _firebaseUser.displayName,
+          'photoUrl': _firebaseUser.photoUrl,
+          'id': _firebaseUser.uid
+        });
+      }
+    }
 
     notifyListeners();
     return _firebaseUser;
