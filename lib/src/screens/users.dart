@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../widgets/theme.dart';
 import '../screens/chats/chat_details.dart';
+import '../models/models.dart';
 
 class UsersScreen extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Users',),),
       body: Container(
         child: StreamBuilder(
             stream: Firestore.instance.collection('users').snapshots(),
@@ -39,19 +41,29 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   Widget _buildListItem({BuildContext context, DocumentSnapshot documentSnapshot}) {
-    var userName = documentSnapshot['username'];
-    return ListTile(
-      title: Text(userName),
-      onTap: (){
-        _handleTileTap(context: context, chatPeer: userName);
+    //var userName = documentSnapshot['username'];
+    User user = User.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
+    if(UserModel.of(context).user.id == user.id){
+      return Container();
+    }else{
+      return ListTile(
+        leading: user.profilePictureUrl != "" || user.profilePictureUrl != " "
+            ? CircleAvatar(backgroundImage: NetworkImage(user.profilePictureUrl),)
+            : CircleAvatar(child: Text('OB'),),
+        title: Text(user.displayName),
+        onTap: (){
+          _handleTileTap(context: context, chatBuddy: user);
         },
-    );
+      );
+
+    }
+
   }
 
-  void _handleTileTap({BuildContext context, String chatPeer}){
+  void _handleTileTap({BuildContext context, User chatBuddy}){
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => ChatDetailsScreen(
-        recipientName: chatPeer,),
+        chatBuddy: chatBuddy,),
     ),
     );
   }

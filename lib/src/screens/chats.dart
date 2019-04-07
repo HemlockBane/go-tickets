@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/chat.dart';
+import '../models/models.dart';
 import '../screens/home.dart';
 import '../screens/users.dart';
 import '../widgets/theme.dart';
@@ -68,7 +69,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
       margin: EdgeInsets.only(top: 11.0, bottom: 16.0, left: 4),
       child: InkWell(
         onTap: (){
-          _handleListTileTap(context: context, recipientName: name);
+          _handleListTileTap(context: context, chatBuddyName: name );
         } ,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,10 +126,10 @@ class _ChatsScreenState extends State<ChatsScreen> {
     );
   }
 
-  void _handleListTileTap({BuildContext context, String recipientName}){
+  void _handleListTileTap({BuildContext context, User chatBuddy, String chatBuddyName}){
     Navigator.push(context, MaterialPageRoute(
         builder: (context) => ChatDetailsScreen(
-          recipientName: recipientName,),
+          recipientName: chatBuddyName),
       ),
     );
   }

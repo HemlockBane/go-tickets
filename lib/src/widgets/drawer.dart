@@ -78,13 +78,13 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
               builder: (context, widget, userModel){
                 return UserAccountsDrawerHeader(
                   accountName: Text(
-                    userModel.profile.displayName,
+                    userModel.user.displayName,
                     style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkLavender),),
                   accountEmail: Text(
-                      userModel.profile.email,
+                      userModel.user.email,
                       style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey)),
                   currentAccountPicture: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.profile.profilePictureUrl)),
+                      backgroundImage: NetworkImage(userModel.user.profilePictureUrl)),
                 );
               })
       );

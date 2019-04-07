@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:go_tickets/src/widgets/theme.dart';
 import 'package:go_tickets/src/models/chat.dart';
+import 'package:go_tickets/src/models/models.dart';
 
 class ChatDetailsScreen extends StatefulWidget {
   final String recipientName;
+  final User chatBuddy;
 
-  ChatDetailsScreen({this.recipientName});
+  ChatDetailsScreen({this.chatBuddy, this.recipientName});
   @override
   _ChatDetailsScreenState createState() => _ChatDetailsScreenState();
 }
@@ -40,7 +42,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text(widget.recipientName,
+          child: Text(widget.recipientName == null
+              ? widget.chatBuddy.displayName
+              : widget.recipientName ,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.title.copyWith(color: Colors.black)),
         ),

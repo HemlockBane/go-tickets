@@ -14,7 +14,7 @@ class UserModel extends Model {
   FirebaseAuth _firebaseAuth;
   FirebaseUser _firebaseUser;
 
-  Profile profile;
+  User user;
 
   bool get isSignedIn {
     print('models.dart, ln 21: Is signed in - ${_firebaseUser != null}');
@@ -33,7 +33,7 @@ class UserModel extends Model {
 
   _loadUserData({FirebaseUser firebaseUser}) {
     if (isSignedIn) {
-      profile = Profile.initialise(
+      user = User.initialise(
           displayName: firebaseUser.displayName,
           email: firebaseUser.email,
           profilePictureUrl: firebaseUser.photoUrl,
@@ -82,7 +82,7 @@ class UserModel extends Model {
   }
 }
 
-class Profile {
+class User {
   String id = '';
   String displayName = '';
   String firstName = '';
@@ -91,7 +91,7 @@ class Profile {
   String profilePictureUrl = '';
   Function notifyListeners;
 
-  Profile.initialise(
+  User.initialise(
       {this.id,
       this.displayName,
       this.firstName,
@@ -102,8 +102,14 @@ class Profile {
     notifyListeners();
   }
 
+  User.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}){
+    displayName = documentSnapshot['username'];
+    id = documentSnapshot['id'];
+    profilePictureUrl = documentSnapshot['photoUrl'];
+  }
+
   @override
   String toString() {
-    return 'Profile is: $displayName - $email';
+    return 'User is: $displayName - $email';
   }
 }
