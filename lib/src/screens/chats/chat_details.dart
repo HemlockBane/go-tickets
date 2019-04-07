@@ -181,7 +181,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               child: TextField(
                 focusNode: textFocusNode,
                 controller: textEditingController,
-                textInputAction: TextInputAction.newline,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.done,
+                maxLines: null,
                 decoration: InputDecoration.collapsed(
                     hintText: 'Type here...',
                     hintStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
