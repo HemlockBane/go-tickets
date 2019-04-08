@@ -111,7 +111,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   Widget _buildMessageList(){
     var userProfileId = UserModel.of(context).user.id;
     var recipientId = widget.chatBuddy.id;
-    //print('chat_details.dart, ln 83: chatlist length is ${chatList.length}');
+
     return Flexible(
       child: StreamBuilder(
           stream: Firestore.instance.collection('messages')
@@ -132,18 +132,20 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               itemBuilder: (context, rowIterator){
                 DocumentSnapshot documentSnapshot = chatList[rowIterator];
 
-                print(documentSnapshot['message']);
-                //return _buildChatItem(chat: chat, chatList: chatList, chatIndex: rowIterator);
-              },
-          reverse: true,);
+                Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
+                return _buildChatItem(chat: chat, chatList: chatList, chatIndex: rowIterator);
+              }, );
         }
           }),
     );
   }
 
   Widget _buildChatItem({Chat chat, List chatList, int chatIndex}){
+
+    var userId = UserModel.of(context).user.id;
+    print(userId);
     // If the chat was sent by the user, align to the right
-    if(chat.peerId == 0){
+    if(chat.senderId == userId){
       return Column(
         children: <Widget>[
           isAfterLastLeftMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date sent') : Container(),
@@ -193,16 +195,21 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   }
 
-  bool isAfterLastRightMessage({int chatIndex, List<Chat>chatList}){
-    if((chatIndex > 0 && chatList != null && chatList[chatIndex - 1].peerId == 0 || chatIndex == 0)){
+  bool isAfterLastRightMessage({int chatIndex, List chatList}){
+
+    var userProfileId = UserModel.of(context).user.id;
+    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
+    if((chatIndex > 0 && chatList != null && chat.senderId == userProfileId || chatIndex == 0)){
       return true;
     }
     else
       return false;
   }
 
-  bool isAfterLastLeftMessage({int chatIndex, List<Chat>chatList}){
-    if((chatIndex > 0 && chatList != null && chatList[chatIndex - 1].peerId == 1 || chatIndex == 0))
+  bool isAfterLastLeftMessage({int chatIndex, List chatList}){
+    var recipientId = widget.chatBuddy.id;
+    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
+    if((chatIndex > 0 && chatList != null && chat.senderId ==  recipientId|| chatIndex == 0))
       return true;
     else
       return false;
@@ -254,10 +261,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     var recipientId = widget.chatBuddy.id;
 
     if(text.trim() != ''){
-
-      ChatHelper.addChatToList(
-          Chat(peer: 'Me', peerId: 0, message: text));
-
       String dateString = DateTime.now().millisecondsSinceEpoch.toString();
 
       DocumentReference documentReference = Firestore.instance
@@ -265,9 +268,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       .document(_createChatId(recipientId:recipientId, userProfileId: userProfileId ))
       .collection('chats')
       .document(dateString);
-
-      //Chat chat = Chat(message: text, messageDate: dateString );
-      //Map chat = Map();
 
       Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
