@@ -134,7 +134,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
                 Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
                 return _buildChatItem(chat: chat, chatList: chatList, chatIndex: rowIterator);
-              }, );
+              },
+          reverse: true,);
         }
           }),
     );
