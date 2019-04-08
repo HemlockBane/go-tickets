@@ -42,9 +42,10 @@ class UserModel extends Model {
           displayName: firebaseUser.displayName,
           email: firebaseUser.email,
           profilePictureUrl: firebaseUser.photoUrl,
+          id: firebaseUser.uid,
           notifyListeners: notifyListeners);
 
-      //print('models.dart, ln 43: ${profile.toString()}');
+      //print('models.dart, ln 43: ${user.toString()}');
     }
   }
 
@@ -129,6 +130,6 @@ class User {
 
   @override
   String toString() {
-    return 'User is: $displayName - $email';
+    return 'User is: $displayName - $email - $id';
   }
 }

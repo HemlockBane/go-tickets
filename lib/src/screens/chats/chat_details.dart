@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:go_tickets/src/widgets/theme.dart';
 import 'package:go_tickets/src/models/chat.dart';
@@ -22,6 +23,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   bool isShowingSmileys = false;
 
 
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +41,36 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    Widget _profilePicture(User userInfo){
+      if(userInfo.profilePictureUrl != "" || userInfo.profilePictureUrl != " "){
+        return Container(
+          width: 30,
+          height: 30,
+          margin: EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(userInfo.profilePictureUrl)
+            ),
+            shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
+          ),
+        );
+
+      }else{
+        return Container(
+          width: 30,
+          height: 30,
+          margin: EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
+          ),
+          child: Center(
+            child: Text('OB'),),
+        );
+
+      }
+
+    }
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -54,14 +86,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               color: GoTicketsTheme.darkLavender,
             ),
             onPressed: () {}),
-        actions: <Widget>[
-          Container(
-            width: 30,
-            height: 30,
-            margin: EdgeInsets.only(right: 20),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: GoTicketsTheme.darkGrey),
-          )
+        actions: <Widget>[_profilePicture(widget.chatBuddy)
         ],
       ),
       body: WillPopScope(
@@ -205,27 +230,57 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   }
 
   void _handleSendButtonTap(String text){
+
+    var userProfileId = UserModel.of(context).user.id;
+    var recipientId = widget.chatBuddy.id;
+
     if(text.trim() != ''){
-      // Log chats before adding chat
-      ChatHelper.chats().forEach((chat){
-        //print(' chat_details.dart, 171: Before adding chat - ${chat.message}');
-      });
 
       ChatHelper.addChatToList(
           Chat(peer: 'Me', peerId: 0, message: text));
 
+      String dateString = DateTime.now().millisecondsSinceEpoch.toString();
+
+      DocumentReference documentReference = Firestore.instance
+      .collection('messages')
+      .document(_createChatId(recipientId:recipientId, userProfileId: userProfileId ))
+      .collection('chats')
+      .document(dateString);
+
+      //Chat chat = Chat(message: text, messageDate: dateString );
+      //Map chat = Map();
+
+      Firestore.instance.runTransaction((transaction) async {
+        await transaction.set(
+          documentReference,
+          {
+            'time': dateString,
+            'message': text,
+            'recipient_id': recipientId,
+            'sender_id': userProfileId
+          },
+        );
+      });
       textEditingController.clear();
 
-      // Log chats after adding chat
-      ChatHelper.chats().forEach((chat){
-        print(' chat_details.dart, 180: After adding chat - ${chat.message}');
-      });
       setState(() {
 
       });
     }else{
-      print('Empty string in text field');
+      print('chat_details.dart, ln 227: Empty string in text field');
     }
   }
 
+
+  String _createChatId({String userProfileId, String recipientId}){
+      String chatId = '';
+
+      if(userProfileId.hashCode <= recipientId.hashCode ){
+        chatId = '$userProfileId-$recipientId';
+      }else{
+        chatId = '$recipientId-$userProfileId';
+      }
+
+      return chatId;
+  }
 }
