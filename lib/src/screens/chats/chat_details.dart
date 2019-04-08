@@ -109,20 +109,39 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   }
 
   Widget _buildMessageList(){
-    var chatList = ChatHelper.chatList;
+    var userProfileId = UserModel.of(context).user.id;
+    var recipientId = widget.chatBuddy.id;
     //print('chat_details.dart, ln 83: chatlist length is ${chatList.length}');
     return Flexible(
-      child: ListView.builder(
-          itemCount: chatList.length,
-          itemBuilder: (context, rowIterator){
-            var chat = chatList[rowIterator];
+      child: StreamBuilder(
+          stream: Firestore.instance.collection('messages')
+              .document(_createChatId(userProfileId: userProfileId, recipientId: recipientId))
+              .collection('chats').orderBy('time_sent', descending: true)
+              .snapshots(),
+          builder: (context, snapshot){
+        if(!snapshot.hasData){
+          return Center(
+              child: CircularProgressIndicator(
+                valueColor:
+                AlwaysStoppedAnimation<Color>(GoTicketsTheme.darkLavender),
+              ));
+        }else{
+          var chatList = snapshot.data.documents;
+          return ListView.builder(
+              itemCount: chatList.length,
+              itemBuilder: (context, rowIterator){
+                DocumentSnapshot documentSnapshot = chatList[rowIterator];
 
-            return _buildChatItem(chat: chat, chatList: chatList, chatIndex: rowIterator);
-      }),
+                print(documentSnapshot['message']);
+                //return _buildChatItem(chat: chat, chatList: chatList, chatIndex: rowIterator);
+              },
+          reverse: true,);
+        }
+          }),
     );
   }
 
-  Widget _buildChatItem({Chat chat, List<Chat> chatList, int chatIndex}){
+  Widget _buildChatItem({Chat chat, List chatList, int chatIndex}){
     // If the chat was sent by the user, align to the right
     if(chat.peerId == 0){
       return Column(
@@ -254,7 +273,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         await transaction.set(
           documentReference,
           {
-            'time': dateString,
+            'time_sent': dateString,
             'message': text,
             'recipient_id': recipientId,
             'sender_id': userProfileId
