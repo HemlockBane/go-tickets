@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _loginButton(){
     return Container(
-      child: FlatButton(
+      child: MaterialButton(
         color: GoTicketsTheme.darkLavender,
         padding: EdgeInsets.all(0.0),
         child: ScopedModelDescendant<UserModel>(

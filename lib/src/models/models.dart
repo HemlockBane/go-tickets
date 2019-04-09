@@ -17,8 +17,7 @@ class UserModel extends Model {
   User user;
   bool _isConnecting = false;
 
-  bool get isSignedIn {
-    print('models.dart, ln 21: Is signed in - ${_firebaseUser != null}');
+  bool get hasFirebaseUser {
     return _firebaseUser != null;
   }
 
@@ -33,11 +32,20 @@ class UserModel extends Model {
     _googleSignIn = GoogleSignIn();
     _firebaseAuth = FirebaseAuth.instance;
 
+    _firebaseAuth.onAuthStateChanged.forEach((firebaseUser){
+      _firebaseUser = firebaseUser;
+      if(_firebaseUser != null){
+        loadUserData(firebaseUser: firebaseUser);
+        print(_firebaseUser.displayName);
+      }
+    });
+
+
     return this;
   }
 
-  _loadUserData({FirebaseUser firebaseUser}) {
-    if (isSignedIn) {
+  loadUserData({FirebaseUser firebaseUser}) {
+    if (hasFirebaseUser) {
       user = User.initialise(
           displayName: firebaseUser.displayName,
           email: firebaseUser.email,
@@ -45,7 +53,6 @@ class UserModel extends Model {
           id: firebaseUser.uid,
           notifyListeners: notifyListeners);
 
-      //print('models.dart, ln 43: ${user.toString()}');
     }
   }
 
@@ -68,7 +75,7 @@ class UserModel extends Model {
       );
 
       _firebaseUser = await _firebaseAuth.signInWithCredential(authCredential);
-      _loadUserData(firebaseUser: _firebaseUser);
+      loadUserData(firebaseUser: _firebaseUser);
     }catch(error){
       _connecting(isConnecting: false);
       print('models.dart: ln 73 : error signing in: $error');
