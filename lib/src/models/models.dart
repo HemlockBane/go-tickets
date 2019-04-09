@@ -32,7 +32,7 @@ class UserModel extends Model {
     _googleSignIn = GoogleSignIn();
     _firebaseAuth = FirebaseAuth.instance;
 
-    _firebaseAuth.onAuthStateChanged.forEach((firebaseUser){
+    _firebaseAuth.onAuthStateChanged.listen((firebaseUser){
       _firebaseUser = firebaseUser;
       if(_firebaseUser != null){
         loadUserData(firebaseUser: firebaseUser);
