@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'models.dart';
 
 class Chat {
   String peer;
@@ -9,36 +10,24 @@ class Chat {
   String messageDate;
   String unreadMessageCount;
 
-  Chat(
-      {this.peer,
-      this.senderId,
-      this.message,
-      this.messageDate});
+  Chat({this.peer, this.senderId, this.message, this.messageDate});
 
-  Chat.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}){
+  Chat.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}) {
     message = documentSnapshot['message'];
     messageDate = documentSnapshot['time_sent'];
     senderId = documentSnapshot['sender_id'];
-
   }
 }
-class ChatPreview{
+
+class ChatPreview {
   String peerId;
   String peer;
   String lastMessage;
   String lastMessageDateTime;
+  User chatPeer;
   int isAvailable; // 0 for active, 1 for online but not active, 2 for busy, 3 for away
 
-//  ChatPreview(
-//      {this.peerId,
-//        this.peer,
-//        this.lastMessage,
-//        this.lastMessageDateTime,
-//        this.isAvailable});
-
-  ChatPreview.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}){
-
-    print('snapshot data : ${documentSnapshot.data}');
+  ChatPreview.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}) {
     var snapshotData = documentSnapshot.data;
 
     peerId = snapshotData['peer_id'];
@@ -46,29 +35,18 @@ class ChatPreview{
     lastMessage = snapshotData['last_message'];
     lastMessageDateTime = snapshotData['last_message_date'];
 
-
-
-    //ChatPreview chatPreview = fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-
-    var documentReference = Firestore.instance.collection('users').document(peerId);
-
-    documentReference.get().then((documentSnapshot){
-      peer = documentSnapshot['username'];
-      print(peer);
-    }).whenComplete((){
-    });
-
-
-
-    print('$peerId - $lastMessage - $lastMessageDateTime');
-
+    _loadChatPeerDetails(peerId);
 
 //    var snapShotdata = documentSnapshot.reference.;
 //    print(snapShotdata);
+  }
 
+  void _loadChatPeerDetails(String peerId) {
+    var documentReference =
+        Firestore.instance.collection('users').document(peerId);
 
+    documentReference.get().then((documentSnapshot) {
+      //chatPeer = User.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
+    });
   }
 }
-
-
-

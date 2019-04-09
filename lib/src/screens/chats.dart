@@ -16,8 +16,12 @@ class ChatsScreen extends StatefulWidget {
 
 class _ChatsScreenState extends State<ChatsScreen> {
 
+  User chatPeer;
+
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.chat_bubble),
@@ -40,13 +44,16 @@ class _ChatsScreenState extends State<ChatsScreen> {
                     itemBuilder: (context, rowIterator) {
                       DocumentSnapshot documentSnapshot = snapshot.data.documents[rowIterator];
 
+
                       //Color bubbleIndicatorColor;
                       //bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
 
                       var chat = ChatPreview.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
+                      _loadUserDetails(chat.peerId);
 
                       return chatPreviewListTile(
                           name: chat.peer,
+                          peerId: chat.peerId ,
                           lastMessage: chat.lastMessage,
                           lastMessageDate: chat.lastMessageDateTime,
                           color: Colors.white);
@@ -78,13 +85,13 @@ class _ChatsScreenState extends State<ChatsScreen> {
     return indicatorColor;
   }
 
-  Widget chatPreviewListTile({String name, String lastMessage, String lastMessageDate, Color color}){
+  Widget chatPreviewListTile({String name, String lastMessage, String lastMessageDate, String peerId, Color color}){
     return Container(
       padding: EdgeInsets.all(6.0),
       margin: EdgeInsets.only(top: 11.0, bottom: 16.0, left: 4),
       child: InkWell(
         onTap: (){
-          _handleListTileTap(context: context, chatBuddyName: name );
+          _handleListTileTap(context: context, chatBuddy: chatPeer );
         } ,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,10 +117,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
                             color: Colors.white,
                             borderRadius: BorderRadius.all(Radius.circular(4))),),
                     )
-
                   ],
                 ))
-            
           ],
           ),
           Column(
@@ -144,10 +149,20 @@ class _ChatsScreenState extends State<ChatsScreen> {
   void _handleListTileTap({BuildContext context, User chatBuddy, String chatBuddyName}){
     Navigator.push(context, MaterialPageRoute(
         builder: (context) => ChatDetailsScreen(
-          recipientName: chatBuddyName),
+          recipientName: chatBuddyName,
+          chatBuddy: chatBuddy,),
       ),
     );
   }
+
+  void _loadUserDetails(String peerId){
+    var documentReference = Firestore.instance.collection('users').document(peerId);
+
+    documentReference.get().then((documentSnapshot){
+      chatPeer = User.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
+    });
+  }
+
 
   void _handleFloatingActionButtonTap({BuildContext context}){
     Navigator.push(context, MaterialPageRoute(

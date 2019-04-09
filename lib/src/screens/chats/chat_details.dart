@@ -278,7 +278,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           .document(chatId);
 
 
-
       Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
           documentReference,
@@ -304,17 +303,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           },
         );
       });
-
-//      Firestore.instance.runTransaction((transaction) async {
-//        await transaction.update(
-//          chatIdDocumentReference,
-//          {
-//            'last_message': text,
-//            'last_message-date': dateString,
-//            'chat_id': chatId
-//          },
-//        );
-//      });
       textEditingController.clear();
 
       setState(() {
