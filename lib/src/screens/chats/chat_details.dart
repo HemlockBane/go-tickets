@@ -129,14 +129,16 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                 AlwaysStoppedAnimation<Color>(GoTicketsTheme.darkLavender),
               ));
         }else{
-          var chatList = snapshot.data.documents;
+          List chatList = snapshot.data.documents;
+
+          print(chatList.length);
           return ListView.builder(
               itemCount: chatList.length,
               itemBuilder: (context, rowIterator){
                 DocumentSnapshot documentSnapshot = chatList[rowIterator];
 
                 Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-                return _buildChatItem(chat: chat, chatList: chatList, chatIndex: rowIterator);
+                return _buildChatItem(chat: chat, chatList: chatList.reversed.toList(), chatIndex: rowIterator);
               },
           reverse: true,);
         }
@@ -199,9 +201,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   }
 
   bool isAfterLastRightMessage({int chatIndex, List chatList}){
-
     var userProfileId = UserModel.of(context).user.id;
-    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
+    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex ]);
     if((chatIndex > 0 && chatList != null && chat.senderId == userProfileId || chatIndex == 0)){
       return true;
     }
@@ -211,8 +212,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   bool isAfterLastLeftMessage({int chatIndex, List chatList}){
     var recipientId = widget.chatBuddy.id;
+    var userProfileId = UserModel.of(context).user.id;
     Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
-    if((chatIndex > 0 && chatList != null && chat.senderId ==  recipientId|| chatIndex == 0))
+    if((chatIndex > 0 && chatList != null && chat.senderId !=  userProfileId|| chatIndex == 0))
       return true;
     else
       return false;

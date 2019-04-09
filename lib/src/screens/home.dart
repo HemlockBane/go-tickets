@@ -9,7 +9,7 @@ import '../widgets/drawer.dart';
 import '../screens/events.dart';
 import '../screens/places.dart';
 import '../screens/profile.dart';
-import '../screens/chats.dart';
+import '../screens/chat_preview.dart';
 import '../screens/tickets.dart';
 
 
