@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/chat.dart';
 import '../models/models.dart';
@@ -17,7 +18,6 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var chatPreviewList = ChatPreviewHelper.chatPreviews();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.chat_bubble),
@@ -26,20 +26,35 @@ class _ChatsScreenState extends State<ChatsScreen> {
           }),
       body: Container(
           width: MediaQuery.of(context).size.width,
-          child: ListView.builder(
-              itemCount: chatPreviewList.length,
-              itemBuilder: (context, rowIterator) {
-                var chatSnippet = chatPreviewList[rowIterator];
+          child: StreamBuilder(
+            stream: Firestore.instance.collection('messages').getDocuments().asStream(),
+            builder: (context, snapshot){
+              if(!snapshot.hasData){
+                return Center(
+                    child: CircularProgressIndicator(
+                    ));
+              }else{
+                var chatList = snapshot.data.documents;
+                return ListView.builder(
+                    itemCount: chatList.length,
+                    itemBuilder: (context, rowIterator) {
+                      DocumentSnapshot documentSnapshot = snapshot.data.documents[rowIterator];
 
-                Color bubbleIndicatorColor;
-                bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
+                      //Color bubbleIndicatorColor;
+                      //bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
 
-                return chatPreviewListTile(
-                  name: chatSnippet.peer,
-                  lastMessage: chatSnippet.mostRecentMessage,
-                  lastMessageDate: chatSnippet.mostRecentMessageDate,
-                  color: bubbleIndicatorColor);
-              })),
+                      var chat = ChatPreview.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
+
+                      return chatPreviewListTile(
+                          name: chat.peer,
+                          lastMessage: chat.lastMessage,
+                          lastMessageDate: chat.lastMessageDateTime,
+                          color: Colors.white);
+
+                    });
+              }
+            },
+          )),
     );
   }
 

@@ -19,6 +19,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode textFocusNode = FocusNode();
+  final ScrollController listScrollController = ScrollController();
 
   bool isShowingSmileys = false;
 
@@ -114,9 +115,11 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
     return Flexible(
       child: StreamBuilder(
-          stream: Firestore.instance.collection('messages')
+          stream: Firestore.instance
+              .collection('messages')
               .document(_createChatId(userProfileId: userProfileId, recipientId: recipientId))
-              .collection('chats').orderBy('time_sent', descending: true)
+              .collection('chats')
+              .orderBy('time_sent', descending: true)
               .snapshots(),
           builder: (context, snapshot){
         if(!snapshot.hasData){
@@ -144,7 +147,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   Widget _buildChatItem({Chat chat, List chatList, int chatIndex}){
 
     var userId = UserModel.of(context).user.id;
-    print(userId);
     // If the chat was sent by the user, align to the right
     if(chat.senderId == userId){
       return Column(
@@ -262,13 +264,20 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     var recipientId = widget.chatBuddy.id;
 
     if(text.trim() != ''){
+      String chatId = _createChatId(recipientId:recipientId, userProfileId: userProfileId);
       String dateString = DateTime.now().millisecondsSinceEpoch.toString();
 
       DocumentReference documentReference = Firestore.instance
       .collection('messages')
-      .document(_createChatId(recipientId:recipientId, userProfileId: userProfileId ))
+      .document(chatId)
       .collection('chats')
       .document(dateString);
+
+      DocumentReference chatIdDocumentReference = Firestore.instance
+          .collection('messages')
+          .document(chatId);
+
+
 
       Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
@@ -281,6 +290,31 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           },
         );
       });
+
+      Firestore.instance.runTransaction((transaction) async {
+        await transaction.set(
+          chatIdDocumentReference,
+          {
+            'chat_id': chatId,
+            'peer_id': widget.chatBuddy.id,
+            'peer_name': widget.chatBuddy.displayName,
+            'last_message': text,
+            'last_message_date': dateString,
+
+          },
+        );
+      });
+
+//      Firestore.instance.runTransaction((transaction) async {
+//        await transaction.update(
+//          chatIdDocumentReference,
+//          {
+//            'last_message': text,
+//            'last_message-date': dateString,
+//            'chat_id': chatId
+//          },
+//        );
+//      });
       textEditingController.clear();
 
       setState(() {
