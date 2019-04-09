@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+
 
 import '../models/chat.dart';
 import '../models/models.dart';
@@ -10,6 +12,7 @@ import './chats/chat_details.dart';
 
 class ChatsScreen extends StatefulWidget {
 
+
   @override
   _ChatsScreenState createState() => _ChatsScreenState();
 }
@@ -17,7 +20,22 @@ class ChatsScreen extends StatefulWidget {
 class _ChatsScreenState extends State<ChatsScreen> {
 
   User chatPeer;
+  Timer timer;
 
+@override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
+      setState(() {
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {

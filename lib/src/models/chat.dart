@@ -30,6 +30,7 @@ class ChatPreview {
 
   ChatPreview.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}) {
     var snapshotData = documentSnapshot.data;
+
     peerId = snapshotData['peer_id'];
     _loadChatPeerDetails(peerId);
 
@@ -38,11 +39,6 @@ class ChatPreview {
     lastMessageDateTime = formatTime(lastMessageTimeInMillisecs);
     peer = snapshotData['peer_name'];
     lastMessage = snapshotData['last_message'];
-
-
-
-
-
 
   }
 
