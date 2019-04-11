@@ -23,6 +23,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   final ScrollController listScrollController = ScrollController();
 
   bool isShowingSmileys = false;
+  var chatList;
 
 
 
@@ -111,14 +112,15 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   }
 
   Widget _buildMessageList(){
-    var userProfileId = UserModel.of(context).user.id;
-    var recipientId = widget.chatBuddy.id;
+    String userProfileId = UserModel.of(context).user.id;
+    String recipientId = widget.chatBuddy.id;
+    String chatId = _createChatId(recipientId: recipientId, userProfileId: userProfileId);
 
     return Flexible(
       child: StreamBuilder(
           stream: Firestore.instance
               .collection('messages')
-              .document(_createChatId(userProfileId: userProfileId, recipientId: recipientId))
+              .document(chatId)
               .collection('chats')
               .orderBy('time_sent', descending: true)
               .snapshots(),
@@ -130,16 +132,15 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                 AlwaysStoppedAnimation<Color>(GoTicketsTheme.darkLavender),
               ));
         }else{
-          List chatList = snapshot.data.documents;
+          chatList = snapshot.data.documents;
 
           //print(chatList.length);
           return ListView.builder(
-              itemCount: chatList.length,
-              itemBuilder: (context, rowIterator){
-                DocumentSnapshot documentSnapshot = chatList[rowIterator];
-
-                Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-                return _buildChatItem(chat: chat, chatList: chatList.reversed.toList(), chatIndex: rowIterator);
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, rowIndex){
+//                DocumentSnapshot documentSnapshot = chatList[rowIndex];
+//                Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
+                return _buildChatItem(document: snapshot.data.documents[rowIndex], index: rowIndex);
               },
           reverse: true,);
         }
@@ -147,18 +148,13 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     );
   }
 
-  Widget _buildChatItem({Chat chat, List chatList, int chatIndex}){
+  Widget _buildChatItem({int index, DocumentSnapshot document}){
 
     var userId = UserModel.of(context).user.id;
     // If the chat was sent by the user, align to the right
-    if(chat.senderId == userId){
+    if(document['sender_id'] == userId){
       return Column(
         children: <Widget>[
-//          isAfterLastLeftMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date sent') : Container(),
-//          isAfterMessageChatByEightMins(chatIndex, chatList)
-//              ? Text(formatTime(chat.messageDate), style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey, fontSize: 15)) : Container(),
-
-          //isAfterLastLeftMessage(chatIndex: chatIndex, chatList: chatList) ? Text('After last right message') : Container(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -168,7 +164,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     right: 10.0),
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                 constraints: BoxConstraints(maxWidth: 300),
-                child: Text(chat.message,
+                child: Text(document['message'],
                   style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
                 decoration: BoxDecoration(
                   color: GoTicketsTheme.lightLavender,
@@ -192,63 +188,34 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     color: GoTicketsTheme.darkLavender,
                     borderRadius: BorderRadius.all(Radius.circular(5.0))
                 ),
-                child: Text(chat.message,
+                child: Text(document['message'],
                   style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
 
               )],
           ),
-          isAfterLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? Text('After last right message') : Container(),
+          isLastMessageLeft(index: index, userId: userId)
+              ? Text(formatTime(document['time_sent']))
+              : Container()
       ],);
     }
 
-
   }
 
-  // Use for right
-  bool isAfterLastLeftMessage({int chatIndex, List chatList}){
-    var userProfileId = UserModel.of(context).user.id;
-    bool condition = false;
-
-    if(chatIndex > 0 && chatList != null || chatIndex == 0){
-      Chat previousChat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
-      if(previousChat.senderId !=  userProfileId){
-        condition = true;
-      }
+  bool isLastMessageLeft({int index, String userId }){
+    print('index is $index');
+    if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] == userId) || index == 0){
+      return true;
+    }else{
+      return false;
     }
-
-    return condition;
   }
 
-  // Use for left
-  bool isAfterLastRightMessage({int chatIndex, List chatList}){
-    var userProfileId = UserModel.of(context).user.id;
-    bool condition = false;
-
-    if(chatIndex > 0 && chatList != null || chatIndex == 0){
-      Chat previousChat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex - 1]);
-      if(previousChat.senderId ==  userProfileId){
-        print('I sent ${previousChat.message}');
-        condition = true;
-      }
+  bool isLastMessageRight({int index, String userId }){
+    if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] != userId) || index == 0){
+      return true;
+    }else{
+      return false;
     }
-
-    return condition;
-  }
-
-
-  bool isAfterMessageChatByEightMins(int chatIndex, List chatList){
-
-    bool isAfterMessageChatByEightMins = false;
-    if((chatIndex > 0 && chatList != null) ){
-      Chat previousChat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex - 1]);
-      Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
-
-      //print('previous : ${previousChat.message}  -  current: ${chat.message}');
-       isAfterMessageChatByEightMins = isTimeDifferenceAboveEightMinutes(previousTime: previousChat.messageDate, currentTime:  chat.messageDate);
-    }
-
-    //print(isAfterMessageChatByEightMins);
-    return isAfterMessageChatByEightMins;
   }
 
   Widget _buildTextInputBar(){
@@ -293,6 +260,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   void _handleSendButtonTap(String text){
 
+    textEditingController.clear();
+
     var userProfileId = UserModel.of(context).user.id;
     var recipientId = widget.chatBuddy.id;
 
@@ -336,7 +305,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           },
         );
       });
-      textEditingController.clear();
 
       setState(() {
 
