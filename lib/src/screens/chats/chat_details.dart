@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_tickets/src/widgets/theme.dart';
 import 'package:go_tickets/src/models/chat.dart';
 import 'package:go_tickets/src/models/models.dart';
-import 'package:go_tickets/src/widgets/time_tool.dart';
+import 'package:go_tickets/src/widgets/datetime_formatter.dart';
 
 class ChatDetailsScreen extends StatefulWidget {
   final String recipientName;
