@@ -2,9 +2,8 @@ import 'package:intl/intl.dart';
 
 String formatTime(String timeInMillisecs) {
   String formattedTime = '';
-  DateTime dateTime =
-  DateTime.fromMillisecondsSinceEpoch(int.parse(timeInMillisecs));
-  print('time_tool.dart - fed in ${formatDate(dateTime: dateTime)}');
+  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(timeInMillisecs));
+  //print('time_tool.dart - fed in ${formatDate(dateTime: dateTime)}');
 
   Duration timeDifference = DateTime.now().difference(dateTime);
 
@@ -58,8 +57,7 @@ String formatDate(
     if (messageDateString == null)
       return "";
 
-    DateTime dateTime =
-    DateTime.fromMillisecondsSinceEpoch(int.parse(messageDateString));
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(messageDateString));
     formattedTime = DateFormat(formatPattern).format(dateTime);
   }
 
@@ -68,11 +66,9 @@ String formatDate(
 
 bool isTimeDifferenceAboveEightMinutes(
     {String previousTime, String currentTime}) {
-  DateTime previousDateTime =
-  DateTime.fromMillisecondsSinceEpoch(int.parse(previousTime));
+  DateTime previousDateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(previousTime));
 
-  DateTime currentDateTime =
-  DateTime.fromMillisecondsSinceEpoch(int.parse(currentTime));
+  DateTime currentDateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(currentTime));
 
   Duration timeDifference = currentDateTime.difference(previousDateTime);
 
