@@ -155,14 +155,16 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       return Column(
         children: <Widget>[
 //          isAfterLastLeftMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date sent') : Container(),
-          isAfterMessageChatByEightMins(chatIndex, chatList)
-              ? Text(formatTime(chat.messageDate), style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey, fontSize: 15)) : Container(),
+//          isAfterMessageChatByEightMins(chatIndex, chatList)
+//              ? Text(formatTime(chat.messageDate), style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey, fontSize: 15)) : Container(),
+
+          //isAfterLastLeftMessage(chatIndex: chatIndex, chatList: chatList) ? Text('After last right message') : Container(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(top: 2.5,
-                    bottom: isLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? 10 : 2.5,
+                    //bottom: isLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? 10 : 2.5,
                     right: 10.0),
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                 constraints: BoxConstraints(maxWidth: 300),
@@ -195,33 +197,42 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
               )],
           ),
-
-
+          isAfterLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? Text('After last right message') : Container(),
       ],);
     }
 
 
   }
 
-  bool isLastRightMessage({int chatIndex, List chatList}){
+  // Use for right
+  bool isAfterLastLeftMessage({int chatIndex, List chatList}){
     var userProfileId = UserModel.of(context).user.id;
-    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
-    if((chatIndex > 0 && chatList != null && chat.senderId == userProfileId || chatIndex == 0)){
-      return true;
+    bool condition = false;
+
+    if(chatIndex > 0 && chatList != null || chatIndex == 0){
+      Chat previousChat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
+      if(previousChat.senderId !=  userProfileId){
+        condition = true;
+      }
     }
-    else
-      return false;
+
+    return condition;
   }
 
-  bool isLastLeftMessage({int chatIndex, List chatList}){
-    var recipientId = widget.chatBuddy.id;
+  // Use for left
+  bool isAfterLastRightMessage({int chatIndex, List chatList}){
     var userProfileId = UserModel.of(context).user.id;
-    Chat previousChat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
-    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex - 1]);
-    if((chatIndex > 0 && chatList != null && chat.senderId !=  userProfileId|| chatIndex == 0))
-      return true;
-    else
-      return false;
+    bool condition = false;
+
+    if(chatIndex > 0 && chatList != null || chatIndex == 0){
+      Chat previousChat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex - 1]);
+      if(previousChat.senderId ==  userProfileId){
+        print('I sent ${previousChat.message}');
+        condition = true;
+      }
+    }
+
+    return condition;
   }
 
 
