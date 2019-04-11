@@ -136,6 +136,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
           //print(chatList.length);
           return ListView.builder(
+            controller: listScrollController,
               itemCount: snapshot.data.documents.length,
               itemBuilder: (context, rowIndex){
 //                DocumentSnapshot documentSnapshot = chatList[rowIndex];
@@ -151,6 +152,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   Widget _buildChatItem({int index, DocumentSnapshot document}){
 
     var userId = UserModel.of(context).user.id;
+
     // If the chat was sent by the user, align to the right
     if(document['sender_id'] == userId){
       return Column(
@@ -160,7 +162,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(top: 2.5,
-                    //bottom: isLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? 10 : 2.5,
                     right: 10.0),
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                 constraints: BoxConstraints(maxWidth: 300),
@@ -306,9 +307,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         );
       });
 
-      setState(() {
-
-      });
+      listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     }else{
       print('chat_details.dart, ln 227: Empty string in text field');
     }
