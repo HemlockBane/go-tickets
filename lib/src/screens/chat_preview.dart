@@ -10,14 +10,14 @@ import '../screens/users.dart';
 import '../widgets/theme.dart';
 import './chats/chat_details.dart';
 
-class ChatsScreen extends StatefulWidget {
+class ChatPreviewScreen extends StatefulWidget {
 
 
   @override
-  _ChatsScreenState createState() => _ChatsScreenState();
+  _ChatPreviewScreenState createState() => _ChatPreviewScreenState();
 }
 
-class _ChatsScreenState extends State<ChatsScreen> {
+class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
 
   User chatPeer;
   Timer timer;

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_tickets/src/widgets/theme.dart';
 import 'package:go_tickets/src/models/chat.dart';
 import 'package:go_tickets/src/models/models.dart';
+import 'package:go_tickets/src/widgets/time_tool.dart';
 
 class ChatDetailsScreen extends StatefulWidget {
   final String recipientName;
@@ -131,7 +132,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         }else{
           List chatList = snapshot.data.documents;
 
-          print(chatList.length);
+          //print(chatList.length);
           return ListView.builder(
               itemCount: chatList.length,
               itemBuilder: (context, rowIterator){
@@ -153,13 +154,15 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     if(chat.senderId == userId){
       return Column(
         children: <Widget>[
-          isAfterLastLeftMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date sent') : Container(),
+//          isAfterLastLeftMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date sent') : Container(),
+          isAfterMessageChatByEightMins(chatIndex, chatList)
+              ? Text(formatTime(chat.messageDate), style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey, fontSize: 15)) : Container(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(top: 2.5,
-                    bottom: isAfterLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? 10 : 2.5,
+                    bottom: isLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? 10 : 2.5,
                     right: 10.0),
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                 constraints: BoxConstraints(maxWidth: 300),
@@ -177,7 +180,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     }else{
       return Column(
         children: <Widget>[
-          isAfterLastRightMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date sent') : Container(),
           Row(
           mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -193,16 +195,17 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
               )],
           ),
-          //isLastReceivedMessage(chatIndex: chatIndex, chatList: chatList) ? Text('Date Received') : Container()
+
 
       ],);
     }
 
+
   }
 
-  bool isAfterLastRightMessage({int chatIndex, List chatList}){
+  bool isLastRightMessage({int chatIndex, List chatList}){
     var userProfileId = UserModel.of(context).user.id;
-    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex ]);
+    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
     if((chatIndex > 0 && chatList != null && chat.senderId == userProfileId || chatIndex == 0)){
       return true;
     }
@@ -210,14 +213,31 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       return false;
   }
 
-  bool isAfterLastLeftMessage({int chatIndex, List chatList}){
+  bool isLastLeftMessage({int chatIndex, List chatList}){
     var recipientId = widget.chatBuddy.id;
     var userProfileId = UserModel.of(context).user.id;
-    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
+    Chat previousChat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
+    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex - 1]);
     if((chatIndex > 0 && chatList != null && chat.senderId !=  userProfileId|| chatIndex == 0))
       return true;
     else
       return false;
+  }
+
+
+  bool isAfterMessageChatByEightMins(int chatIndex, List chatList){
+
+    bool isAfterMessageChatByEightMins = false;
+    if((chatIndex > 0 && chatList != null) ){
+      Chat previousChat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex - 1]);
+      Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: chatList[chatIndex]);
+
+      //print('previous : ${previousChat.message}  -  current: ${chat.message}');
+       isAfterMessageChatByEightMins = isTimeDifferenceAboveEightMinutes(previousTime: previousChat.messageDate, currentTime:  chat.messageDate);
+    }
+
+    //print(isAfterMessageChatByEightMins);
+    return isAfterMessageChatByEightMins;
   }
 
   Widget _buildTextInputBar(){

@@ -20,7 +20,6 @@ class App extends StatelessWidget {
           theme: GoTicketsTheme().getAppTheme(),
           home: ScopedModelDescendant<UserModel>(builder: (context, child, userModel){
             if (userModel.hasFirebaseUser){
-              print('has firebase user');
               return HomeScreen();
             }else{
               return LoginScreen();

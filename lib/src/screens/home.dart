@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     EventsScreen(),
     PlacesScreen(),
     ProfileScreen(),
-    ChatsScreen(),
+    ChatPreviewScreen(),
     TicketsScreen()
   ];
   Widget _currentPage = pageList[0];

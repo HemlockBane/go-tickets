@@ -36,7 +36,6 @@ class UserModel extends Model {
       _firebaseUser = firebaseUser;
       if(_firebaseUser != null){
         loadUserData(firebaseUser: firebaseUser);
-        print(_firebaseUser.displayName);
       }
     });
 
