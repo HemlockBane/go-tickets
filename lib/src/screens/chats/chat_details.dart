@@ -165,7 +165,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                 constraints: BoxConstraints(maxWidth: 300),
                 child: Text(document['message'],
-                  style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
+                  style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: GoTicketsTheme.midLavender),),
                 decoration: BoxDecoration(
                   color: GoTicketsTheme.lightLavender,
                   borderRadius: BorderRadius.all(Radius.circular(5.0))
@@ -194,7 +194,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               )],
           ),
           isLastMessageLeft(index: index, userId: userId)
-              ? Text(formatTime(document['time_sent']))
+              ? Text(formatTime(document['time_sent']), style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.lightGrey, fontSize: 15),)
               : Container()
       ],);
     }

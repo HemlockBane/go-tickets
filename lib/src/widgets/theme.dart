@@ -4,6 +4,7 @@ class GoTicketsTheme{
 
 
   static final Color darkLavender = Color(0xff8F6FA7);
+  static final Color midLavender = Color(0xff8D7BA4);
   static final Color lightLavender = Color(0xffE6E0EF);
   static final Color darkGrey = Color(0xffAAAAB7);
   static final Color lightGrey = Color(0xffB4B4C2);
