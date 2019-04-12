@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:go_tickets/src/widgets/theme.dart';
 import 'package:go_tickets/src/models/chat.dart';
@@ -60,18 +61,25 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
     Widget _getProfilePicture(){
       if(widget.chatPeer.profilePictureUrl != "" && widget.chatPeer.profilePictureUrl != " "){
-        return Container(
-          width: 30,
-          height: 30,
-          margin: EdgeInsets.only(right: 20),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(widget.chatPeer.profilePictureUrl),
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(15))
-            //shape: BoxShape.circle,
-          ),
-        );
+//        return Container(
+//          width: 30,
+//          height: 30,
+//          margin: EdgeInsets.only(right: 20),
+//          decoration: BoxDecoration(
+//            image: DecorationImage(
+//                image: CachedNetworkImageProvider(widget.chatPeer.profilePictureUrl, errorListener: (){
+//                  //print('chat_details.dart, ln 71: Error loading image');
+//                }),
+//            ),
+//            borderRadius: BorderRadius.all(Radius.circular(15))
+//            //shape: BoxShape.circle,
+//          ),
+//        );
+
+      return Container(
+        child: CircleAvatar(
+          backgroundImage: NetworkImage(widget.chatPeer.profilePictureUrl, ),),
+      );
 
       }else{
         return Container(

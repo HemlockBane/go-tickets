@@ -4,6 +4,6 @@ import './src/app.dart';
 import './src/models/models.dart';
 
 void main() {
-  debugPaintSizeEnabled = true;
+  //debugPaintSizeEnabled = true;
   runApp(App(userModel: UserModel(),));
 }

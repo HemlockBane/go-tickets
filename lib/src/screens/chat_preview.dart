@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
 
 
@@ -18,8 +19,6 @@ class ChatPreviewScreen extends StatefulWidget {
 }
 
 class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
-
-  //User chatPeer;
   Timer timer;
 
 @override
@@ -107,6 +106,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
   Widget chatPreviewListTile({String peerName, String lastMessage, String lastMessageDate, String peerId, String peerAvatarUrl, Color color}){
 
   User chatPeer = User.create(displayName: peerName, id: peerId, profilePictureUrl: peerAvatarUrl);
+  //print('chat_details.dart, ln 109 - display name: ${chatPeer.displayName}, pic url: ${chatPeer.profilePictureUrl}');
 
     return Container(
       padding: EdgeInsets.all(6.0),
@@ -122,9 +122,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
             Container(//padding: EdgeInsets.all(5.0),
               margin: EdgeInsets.only(right: 10),
               child: CircleAvatar(
-                backgroundImage:  peerAvatarUrl != " " || peerAvatarUrl != ""
-                    ? NetworkImage(peerAvatarUrl)
-                    : null ,
+                backgroundImage: CachedNetworkImageProvider(peerAvatarUrl)
               ),
             ),
             Positioned(right: 12.0,
@@ -155,8 +153,12 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                 width: MediaQuery.of(context).size.width/1.25,
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                  Container(padding: EdgeInsets.only(bottom: 5.0),child: Text(peerName)),
-                  Text(lastMessageDate, style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey, fontSize: 14),
+                  Container(
+                      padding: EdgeInsets.only(bottom: 5.0),
+                      child: Text(peerName)),
+                  Text(lastMessageDate,
+                    style: Theme.of(context).textTheme.body1.copyWith(
+                        color: GoTicketsTheme.darkGrey, fontSize: 14),
                     overflow: TextOverflow.ellipsis,)
                 ],
                 ),
