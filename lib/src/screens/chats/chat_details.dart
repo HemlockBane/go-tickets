@@ -45,20 +45,29 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   @override
   Widget build(BuildContext context) {
 
-    Widget _profilePicture(User userInfo){
-      if(userInfo.profilePictureUrl != "" || userInfo.profilePictureUrl != " "){
-        return ClipOval(
-          child: Container(
-            width: 30,
-            height: 30,
-            margin: EdgeInsets.only(right: 20),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(userInfo.profilePictureUrl),
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(15))
-              //shape: BoxShape.circle,
+    String _getImagePlaceholderInitials(){
+      String chatPeerName = widget.chatBuddy.displayName;
+      List nameList = chatPeerName.split(' ');
+
+      String name = nameList[0];
+      String surname = nameList[1];
+
+      return name.substring(0, 1) + surname.substring(0, 1);
+    }
+
+
+    Widget _profilePicture(User chatPeer){
+      if(chatPeer.profilePictureUrl != "" && chatPeer.profilePictureUrl != " "){
+        return Container(
+          width: 30,
+          height: 30,
+          margin: EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(chatPeer.profilePictureUrl),
             ),
+            borderRadius: BorderRadius.all(Radius.circular(15))
+            //shape: BoxShape.circle,
           ),
         );
 
@@ -71,19 +80,17 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
           ),
           child: Center(
-            child: Text('OB'),),
+            child: Text(_getImagePlaceholderInitials()),),
         );
 
       }
-
     }
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text(widget.recipientName == null
               ? widget.chatBuddy.displayName
-              : widget.recipientName ,
-              textAlign: TextAlign.center,
+              : widget.recipientName,
               style: Theme.of(context).textTheme.title.copyWith(color: Colors.black)),
         ),
         leading: IconButton(
@@ -195,7 +202,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
               )],
           ),
-          isLastMessageLeft(index: index, userId: userId) ?
+          isLastLeftMessage(index: index, userId: userId) ?
           Text(formatTime(chat.messageDate),
             style: Theme.of(context).textTheme.body1.copyWith(
                 color: GoTicketsTheme.lightGrey, fontSize: 15),) :
@@ -205,7 +212,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   }
 
-  bool isLastMessageLeft({int index, String userId }){
+  bool isLastLeftMessage({int index, String userId }){
     if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] == userId) || index == 0){
       return true;
     }else{
@@ -213,7 +220,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     }
   }
 
-  bool isLastMessageRight({int index, String userId }){
+  bool isLastRightMessage({int index, String userId }){
     if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] != userId) || index == 0){
       return true;
     }else{
