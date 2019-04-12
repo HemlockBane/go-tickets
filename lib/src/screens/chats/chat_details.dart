@@ -47,15 +47,18 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
     Widget _profilePicture(User userInfo){
       if(userInfo.profilePictureUrl != "" || userInfo.profilePictureUrl != " "){
-        return Container(
-          width: 30,
-          height: 30,
-          margin: EdgeInsets.only(right: 20),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(userInfo.profilePictureUrl)
+        return ClipOval(
+          child: Container(
+            width: 30,
+            height: 30,
+            margin: EdgeInsets.only(right: 20),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(userInfo.profilePictureUrl),
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(15))
+              //shape: BoxShape.circle,
             ),
-            shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
           ),
         );
 
@@ -133,15 +136,12 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               ));
         }else{
           chatList = snapshot.data.documents;
-
-          //print(chatList.length);
           return ListView.builder(
             controller: listScrollController,
-              itemCount: snapshot.data.documents.length,
+              itemCount: chatList.length,
               itemBuilder: (context, rowIndex){
-//                DocumentSnapshot documentSnapshot = chatList[rowIndex];
-//                Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-                return _buildChatItem(document: snapshot.data.documents[rowIndex], index: rowIndex);
+
+                return _buildChatItem(document: chatList[rowIndex], index: rowIndex);
               },
           reverse: true,);
         }
@@ -152,9 +152,10 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   Widget _buildChatItem({int index, DocumentSnapshot document}){
 
     var userId = UserModel.of(context).user.id;
+    Chat chat = Chat.fromDocumentSnapshot(documentSnapshot: document);
 
     // If the chat was sent by the user, align to the right
-    if(document['sender_id'] == userId){
+    if(chat.senderId == userId){
       return Column(
         children: <Widget>[
           Row(
@@ -165,7 +166,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     right: 10.0),
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                 constraints: BoxConstraints(maxWidth: 300),
-                child: Text(document['message'],
+                child: Text(chat.message,
                   style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: GoTicketsTheme.midLavender),),
                 decoration: BoxDecoration(
                   color: GoTicketsTheme.lightLavender,
@@ -189,21 +190,22 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     color: GoTicketsTheme.darkLavender,
                     borderRadius: BorderRadius.all(Radius.circular(5.0))
                 ),
-                child: Text(document['message'],
+                child: Text(chat.message,
                   style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16, color: Colors.white),),
 
               )],
           ),
-          isLastMessageLeft(index: index, userId: userId)
-              ? Text(formatTime(document['time_sent']), style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.lightGrey, fontSize: 15),)
-              : Container()
+          isLastMessageLeft(index: index, userId: userId) ?
+          Text(formatTime(chat.messageDate),
+            style: Theme.of(context).textTheme.body1.copyWith(
+                color: GoTicketsTheme.lightGrey, fontSize: 15),) :
+          Container()
       ],);
     }
 
   }
 
   bool isLastMessageLeft({int index, String userId }){
-    print('index is $index');
     if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] == userId) || index == 0){
       return true;
     }else{
