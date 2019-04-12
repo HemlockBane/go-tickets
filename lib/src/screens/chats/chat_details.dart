@@ -77,6 +77,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 //        );
 
       return Container(
+        margin: EdgeInsets.all(10),
         child: CircleAvatar(
           backgroundImage: NetworkImage(widget.chatPeer.profilePictureUrl, ),),
       );
@@ -107,7 +108,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               color: GoTicketsTheme.darkLavender,
             ),
             onPressed: () {}),
-        actions: <Widget>[_getProfilePicture()
+        actions: <Widget>[_getProfilePicture(),
         ],
       ),
       body: WillPopScope(
