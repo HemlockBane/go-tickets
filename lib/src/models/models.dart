@@ -117,6 +117,9 @@ class User {
   String profilePictureUrl = '';
   Function notifyListeners;
 
+
+  User.create({this.displayName, this.id, this.profilePictureUrl});
+
   User.initialise(
       {this.id,
       this.displayName,

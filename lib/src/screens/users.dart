@@ -57,7 +57,7 @@ class _UsersScreenState extends State<UsersScreen> {
           child: Text('OB', style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white),),),
         title: Text(user.displayName, style: Theme.of(context).textTheme.body1,),
         onTap: (){
-          _handleTileTap(context: context, chatBuddy: user);
+          _handleTileTap(context: context, chatPeer: user);
         },
       );
 
@@ -65,10 +65,9 @@ class _UsersScreenState extends State<UsersScreen> {
 
   }
 
-  void _handleTileTap({BuildContext context, User chatBuddy}){
+  void _handleTileTap({BuildContext context, User chatPeer}){
     Navigator.push(context, MaterialPageRoute(
-      builder: (context) => ChatDetailsScreen(
-        chatBuddy: chatBuddy,),
+      builder: (context) => ChatDetailsScreen(chatPeer: chatPeer,),
     ),
     );
   }

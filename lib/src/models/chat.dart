@@ -6,13 +6,13 @@ import 'models.dart';
 import '../widgets/datetime_formatter.dart';
 
 class Chat {
-  String peer = '';
+  String chatPeer = '';
   String senderId = '';
   String message = '';
   String messageDate = '';
   String unreadMessageCount = '';
 
-  Chat({this.peer, this.senderId, this.message, this.messageDate});
+  Chat({this.chatPeer, this.senderId, this.message, this.messageDate});
 
   Chat.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}) {
     message = documentSnapshot['message'];
@@ -22,24 +22,28 @@ class Chat {
 }
 
 class ChatPreview {
-  String peerId = '';
-  String peerName = '';
-  String peerAvatarUrl = '';
+  String chatPeerName = '';
+  String chatPeerId = '';
+  String chatPeerAvatarUrl = '';
   String lastMessage = '';
-  String lastMessageDateTime = '';
+  String lastMessageTime = '';
   int isAvailable; // 0 for active, 1 for online but not active, 2 for busy, 3 for away
 
   ChatPreview.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}) {
-    var snapshotData = documentSnapshot.data;
-    var lastMessageTimeInMillisecs = snapshotData['last_message_date'];
+    var documentSnapshotData = documentSnapshot.data;
+    var lastMessageTimeInMillisecs = documentSnapshotData['last_message_date'];
 
-    peerId = snapshotData['peer_id'];
-    lastMessageDateTime = formatTime(lastMessageTimeInMillisecs);
-    lastMessage = snapshotData['last_message'];
-    peerName = snapshotData['peer_name'];
-    peerAvatarUrl = snapshotData['peer_avatar'];
+    chatPeerName = documentSnapshotData['peer_name'];
+    chatPeerId = documentSnapshotData['peer_id'];
+    chatPeerAvatarUrl = documentSnapshotData['peer_avatar'];
+    lastMessageTime = formatTime(lastMessageTimeInMillisecs);
+    lastMessage = documentSnapshotData['last_message'];
+  }
 
-
-
+  @override
+  String toString() {
+    return 'Chat peer name: $chatPeerName'
+        'Chat peer id: $chatPeerId'
+        'Chat peer avatar url: $chatPeerAvatarUrl';
   }
 }

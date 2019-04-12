@@ -19,7 +19,7 @@ class ChatPreviewScreen extends StatefulWidget {
 
 class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
 
-  User chatPeer;
+  //User chatPeer;
   Timer timer;
 
 @override
@@ -67,14 +67,14 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                       //bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
 
                       var chatPreview = ChatPreview.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-                      _loadUserDetails(chatPreview.peerId);
+                      //_loadUserDetails(chatPreview.chatPeerId);
 
                       return chatPreviewListTile(
-                          peerName: chatPreview.peerName,
-                          peerId: chatPreview.peerId ,
+                          peerName: chatPreview.chatPeerName,
+                          peerId: chatPreview.chatPeerId ,
                           lastMessage: chatPreview.lastMessage,
-                          lastMessageDate: chatPreview.lastMessageDateTime,
-                          peerAvatarString: chatPreview.peerAvatarUrl,
+                          lastMessageDate: chatPreview.lastMessageTime,
+                          peerAvatarUrl: chatPreview.chatPeerAvatarUrl,
                           color: Colors.white);
 
                     });
@@ -104,13 +104,16 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
     return indicatorColor;
   }
 
-  Widget chatPreviewListTile({String peerName, String lastMessage, String lastMessageDate, String peerId, String peerAvatarString, Color color}){
+  Widget chatPreviewListTile({String peerName, String lastMessage, String lastMessageDate, String peerId, String peerAvatarUrl, Color color}){
+
+  User chatPeer = User.create(displayName: peerName, id: peerId, profilePictureUrl: peerAvatarUrl);
+
     return Container(
       padding: EdgeInsets.all(6.0),
       margin: EdgeInsets.only(top: 11.0, bottom: 16.0, left: 4),
       child: InkWell(
         onTap: (){
-          _handleListTileTap(context: context, chatBuddy: chatPeer );
+          _handleListTileTap(context: context, chatPeer: chatPeer);
         } ,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,8 +122,8 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
             Container(//padding: EdgeInsets.all(5.0),
               margin: EdgeInsets.only(right: 10),
               child: CircleAvatar(
-                backgroundImage:  peerAvatarString != " " || peerAvatarString != ""
-                    ? NetworkImage(peerAvatarString)
+                backgroundImage:  peerAvatarUrl != " " || peerAvatarUrl != ""
+                    ? NetworkImage(peerAvatarUrl)
                     : null ,
               ),
             ),
@@ -170,21 +173,11 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
     );
   }
 
-  void _handleListTileTap({BuildContext context, User chatBuddy, String chatBuddyName}){
+  void _handleListTileTap({BuildContext context, User chatPeer}){
     Navigator.push(context, MaterialPageRoute(
-        builder: (context) => ChatDetailsScreen(
-          recipientName: chatBuddyName,
-          chatBuddy: chatBuddy,),
+        builder: (context) => ChatDetailsScreen(chatPeer: chatPeer),
       ),
     );
-  }
-
-  void _loadUserDetails(String peerId){
-    var documentReference = Firestore.instance.collection('users').document(peerId);
-
-    documentReference.get().then((documentSnapshot){
-      chatPeer = User.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-    });
   }
 
 

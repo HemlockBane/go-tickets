@@ -8,10 +8,10 @@ import 'package:go_tickets/src/models/models.dart';
 import 'package:go_tickets/src/widgets/datetime_formatter.dart';
 
 class ChatDetailsScreen extends StatefulWidget {
-  final String recipientName;
-  final User chatBuddy;
+  final User chatPeer;
 
-  ChatDetailsScreen({this.chatBuddy, this.recipientName});
+  ChatDetailsScreen({@required this.chatPeer})
+      : assert(chatPeer != null);
   @override
   _ChatDetailsScreenState createState() => _ChatDetailsScreenState();
 }
@@ -24,6 +24,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   bool isShowingSmileys = false;
   var chatList;
+
 
 
 
@@ -46,7 +47,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   Widget build(BuildContext context) {
 
     String _getImagePlaceholderInitials(){
-      String chatPeerName = widget.chatBuddy.displayName;
+
+      String chatPeerName = widget.chatPeer.displayName;
       List nameList = chatPeerName.split(' ');
 
       String name = nameList[0];
@@ -56,15 +58,15 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     }
 
 
-    Widget _profilePicture(User chatPeer){
-      if(chatPeer.profilePictureUrl != "" && chatPeer.profilePictureUrl != " "){
+    Widget _getProfilePicture(){
+      if(widget.chatPeer.profilePictureUrl != "" && widget.chatPeer.profilePictureUrl != " "){
         return Container(
           width: 30,
           height: 30,
           margin: EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(chatPeer.profilePictureUrl),
+                image: NetworkImage(widget.chatPeer.profilePictureUrl),
             ),
             borderRadius: BorderRadius.all(Radius.circular(15))
             //shape: BoxShape.circle,
@@ -88,9 +90,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text(widget.recipientName == null
-              ? widget.chatBuddy.displayName
-              : widget.recipientName,
+          child: Text(widget.chatPeer.displayName,
               style: Theme.of(context).textTheme.title.copyWith(color: Colors.black)),
         ),
         leading: IconButton(
@@ -99,7 +99,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               color: GoTicketsTheme.darkLavender,
             ),
             onPressed: () {}),
-        actions: <Widget>[_profilePicture(widget.chatBuddy)
+        actions: <Widget>[_getProfilePicture()
         ],
       ),
       body: WillPopScope(
@@ -123,7 +123,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   Widget _buildMessageList(){
     String userProfileId = UserModel.of(context).user.id;
-    String recipientId = widget.chatBuddy.id;
+    String recipientId = widget.chatPeer.id;
     String chatId = _createChatId(recipientId: recipientId, userProfileId: userProfileId);
 
     return Flexible(
@@ -273,9 +273,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     textEditingController.clear();
 
     var userProfileId = UserModel.of(context).user.id;
-    var peerId = widget.chatBuddy.id;
-    var peerName = widget.chatBuddy.displayName;
-    var peerAvatar = widget.chatBuddy.profilePictureUrl;
+    var peerId = widget.chatPeer.id;
+    var peerName = widget.chatPeer.displayName;
+    var peerAvatar = widget.chatPeer.profilePictureUrl;
 
     if(message.trim() != ''){
       String chatId = _createChatId(recipientId:peerId, userProfileId: userProfileId);
