@@ -66,14 +66,15 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                       //Color bubbleIndicatorColor;
                       //bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
 
-                      var chat = ChatPreview.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-                      _loadUserDetails(chat.peerId);
+                      var chatPreview = ChatPreview.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
+                      _loadUserDetails(chatPreview.peerId);
 
                       return chatPreviewListTile(
-                          name: chat.peer,
-                          peerId: chat.peerId ,
-                          lastMessage: chat.lastMessage,
-                          lastMessageDate: chat.lastMessageDateTime,
+                          peerName: chatPreview.peerName,
+                          peerId: chatPreview.peerId ,
+                          lastMessage: chatPreview.lastMessage,
+                          lastMessageDate: chatPreview.lastMessageDateTime,
+                          peerAvatarString: chatPreview.peerAvatarUrl,
                           color: Colors.white);
 
                     });
@@ -103,7 +104,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
     return indicatorColor;
   }
 
-  Widget chatPreviewListTile({String name, String lastMessage, String lastMessageDate, String peerId, Color color}){
+  Widget chatPreviewListTile({String peerName, String lastMessage, String lastMessageDate, String peerId, String peerAvatarString, Color color}){
     return Container(
       padding: EdgeInsets.all(6.0),
       margin: EdgeInsets.only(top: 11.0, bottom: 16.0, left: 4),
@@ -117,7 +118,12 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
           Stack(children: <Widget>[
             Container(//padding: EdgeInsets.all(5.0),
               margin: EdgeInsets.only(right: 10),
-              child: CircleAvatar()),
+              child: CircleAvatar(
+                backgroundImage:  peerAvatarString != " " || peerAvatarString != ""
+                    ? NetworkImage(peerAvatarString)
+                    : null ,
+              ),
+            ),
             Positioned(right: 12.0,
                 child: Stack(
                   children: <Widget>[
@@ -146,7 +152,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                 width: MediaQuery.of(context).size.width/1.25,
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                  Container(padding: EdgeInsets.only(bottom: 5.0),child: Text(name)),
+                  Container(padding: EdgeInsets.only(bottom: 5.0),child: Text(peerName)),
                   Text(lastMessageDate, style: Theme.of(context).textTheme.body1.copyWith(color: GoTicketsTheme.darkGrey, fontSize: 14),
                     overflow: TextOverflow.ellipsis,)
                 ],

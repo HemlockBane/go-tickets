@@ -268,22 +268,24 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     );
   }
 
-  void _handleSendButtonTap(String text){
+  void _handleSendButtonTap(String message){
 
     textEditingController.clear();
 
     var userProfileId = UserModel.of(context).user.id;
-    var recipientId = widget.chatBuddy.id;
+    var peerId = widget.chatBuddy.id;
+    var peerName = widget.chatBuddy.displayName;
+    var peerAvatar = widget.chatBuddy.profilePictureUrl;
 
-    if(text.trim() != ''){
-      String chatId = _createChatId(recipientId:recipientId, userProfileId: userProfileId);
-      String dateString = DateTime.now().millisecondsSinceEpoch.toString();
+    if(message.trim() != ''){
+      String chatId = _createChatId(recipientId:peerId, userProfileId: userProfileId);
+      String timeSent = DateTime.now().millisecondsSinceEpoch.toString();
 
       DocumentReference documentReference = Firestore.instance
       .collection('messages')
       .document(chatId)
       .collection('chats')
-      .document(dateString);
+      .document(timeSent);
 
       DocumentReference chatIdDocumentReference = Firestore.instance
           .collection('messages')
@@ -294,10 +296,10 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         await transaction.set(
           documentReference,
           {
-            'time_sent': dateString,
-            'message': text,
-            'recipient_id': recipientId,
-            'sender_id': userProfileId
+            'time_sent': timeSent,
+            'message': message,
+            'recipient_id': peerId,
+            'sender_id': userProfileId,
           },
         );
       });
@@ -307,10 +309,12 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           chatIdDocumentReference,
           {
             'chat_id': chatId,
-            'peer_id': widget.chatBuddy.id,
-            'peer_name': widget.chatBuddy.displayName,
-            'last_message': text,
-            'last_message_date': dateString,
+            'peer_id': peerId,
+            'peer_name': peerName,
+            'peer_avatar': peerAvatar,
+            'last_message': message,
+            'last_message_date': timeSent,
+
 
           },
         );

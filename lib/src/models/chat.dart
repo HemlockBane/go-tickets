@@ -6,11 +6,11 @@ import 'models.dart';
 import '../widgets/datetime_formatter.dart';
 
 class Chat {
-  String peer;
-  String senderId;
-  String message;
-  String messageDate;
-  String unreadMessageCount;
+  String peer = '';
+  String senderId = '';
+  String message = '';
+  String messageDate = '';
+  String unreadMessageCount = '';
 
   Chat({this.peer, this.senderId, this.message, this.messageDate});
 
@@ -22,34 +22,24 @@ class Chat {
 }
 
 class ChatPreview {
-  String peerId;
-  String peer;
-  String lastMessage;
-  String lastMessageDateTime;
-  User chatPeer;
+  String peerId = '';
+  String peerName = '';
+  String peerAvatarUrl = '';
+  String lastMessage = '';
+  String lastMessageDateTime = '';
   int isAvailable; // 0 for active, 1 for online but not active, 2 for busy, 3 for away
 
   ChatPreview.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}) {
     var snapshotData = documentSnapshot.data;
-
-    peerId = snapshotData['peer_id'];
-    _loadChatPeerDetails(peerId);
-
     var lastMessageTimeInMillisecs = snapshotData['last_message_date'];
 
+    peerId = snapshotData['peer_id'];
     lastMessageDateTime = formatTime(lastMessageTimeInMillisecs);
-    peer = snapshotData['peer_name'];
     lastMessage = snapshotData['last_message'];
+    peerName = snapshotData['peer_name'];
+    peerAvatarUrl = snapshotData['peer_avatar'];
 
-  }
 
-  void _loadChatPeerDetails(String peerId) {
-    var documentReference =
-        Firestore.instance.collection('users').document(peerId);
 
-    documentReference.get().then((documentSnapshot) {
-      //chatPeer = User.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-
-    });
   }
 }
