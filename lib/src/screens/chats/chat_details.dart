@@ -20,11 +20,12 @@ class ChatDetailsScreen extends StatefulWidget {
 
 class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
-  final TextEditingController textEditingController = TextEditingController();
-  final FocusNode textFocusNode = FocusNode();
-  final ScrollController listScrollController = ScrollController();
+  TextEditingController textEditingController = TextEditingController();
+  FocusNode textFocusNode;
+  ScrollController listScrollController;
 
   bool isShowingSmileys = false;
+  int chatLimit = 10;
   var chatList;
 
 
@@ -33,11 +34,14 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    textFocusNode = FocusNode();
     textFocusNode.addListener(_handleKeyboardActiveState);
+    listScrollController = ScrollController();
+    listScrollController.addListener(_scrollListener);
   }
 
   /// Hide smileys when keyboard is active
-  void _handleKeyboardActiveState(){
+   _handleKeyboardActiveState(){
     if(textFocusNode.hasFocus){
       setState(() {
         isShowingSmileys = false;
@@ -45,9 +49,19 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     }
   }
 
+  _scrollListener() {
+    if (listScrollController.offset >=
+        listScrollController.position.maxScrollExtent &&
+        !listScrollController.position.outOfRange) {
+      setState(() {
+        chatLimit += 10;
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-
     Widget _getProfilePicture(){
       if(widget.chatPeer.profilePictureUrl != "" && widget.chatPeer.profilePictureUrl != " "){
        return Container(
@@ -122,6 +136,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               .document(chatId)
               .collection('chats')
               .orderBy('time_sent', descending: true)
+              .limit(chatLimit)
               .snapshots(),
           builder: (context, snapshot){
         if(!snapshot.hasData){
