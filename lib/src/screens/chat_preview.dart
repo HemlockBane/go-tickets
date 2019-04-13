@@ -103,10 +103,48 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
     return indicatorColor;
   }
 
-  Widget chatPreviewListTile({String peerName, String lastMessage, String lastMessageDate, String peerId, String peerAvatarUrl, Color color}){
+  Widget chatPreviewListTile({String peerName,
+    String lastMessage, String lastMessageDate,
+    String peerId, String peerAvatarUrl,
+    Color color}){
 
   User chatPeer = User.create(displayName: peerName, id: peerId, profilePictureUrl: peerAvatarUrl);
   //print('chat_details.dart, ln 109 - display name: ${chatPeer.displayName}, pic url: ${chatPeer.profilePictureUrl}');
+
+  String _getImagePlaceholderInitials(){
+
+    String chatPeerName = peerName;
+    List nameList = chatPeerName.split(' ');
+
+    String name = nameList[0];
+    String surname = nameList[1];
+
+    return name.substring(0, 1) + surname.substring(0, 1);
+  }
+
+  Widget _getCircleAvatar(){
+    if(peerAvatarUrl != "" && peerAvatarUrl != " "){
+      return Container(
+        margin: EdgeInsets.only(right: 10),
+        child: CircleAvatar(
+            backgroundImage: CachedNetworkImageProvider(peerAvatarUrl)
+        ),
+      );
+    }else{
+      return Container(
+      width: 40,
+      height: 40,
+      margin: EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
+      ),
+      child: Center(
+        child: Text(_getImagePlaceholderInitials(), style: TextStyle(color: Colors.white),),
+      ),
+    );
+
+    }
+  }
 
     return Container(
       padding: EdgeInsets.all(6.0),
@@ -119,12 +157,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
           Stack(children: <Widget>[
-            Container(//padding: EdgeInsets.all(5.0),
-              margin: EdgeInsets.only(right: 10),
-              child: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(peerAvatarUrl)
-              ),
-            ),
+            _getCircleAvatar(),
             Positioned(right: 12.0,
                 child: Stack(
                   children: <Widget>[
