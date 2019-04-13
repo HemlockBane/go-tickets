@@ -57,8 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(appBarTitle,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.title.copyWith(
-              color: Colors.black),
-        )),
+              color: Colors.black,),
+            ),
+        ),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.search,), onPressed: () {})
         ],

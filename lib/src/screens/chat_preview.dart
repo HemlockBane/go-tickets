@@ -128,7 +128,9 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
         shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
       ),
       child: Center(
-        child: Text(getPlaceholderInitials(peerName), style: TextStyle(color: Colors.white),),
+        child: Text(getPlaceholderInitials(peerName),
+          style: Theme.of(context).textTheme.body1.copyWith(
+              color: Colors.white, fontSize: 13),),
       ),
     );
 
@@ -177,7 +179,8 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                   children: <Widget>[
                   Container(
                       padding: EdgeInsets.only(bottom: 5.0),
-                      child: Text(peerName)),
+                      child: Text(peerName),
+                  ),
                   Text(lastMessageDate,
                     style: Theme.of(context).textTheme.body1.copyWith(
                         color: GoTicketsTheme.darkGrey, fontSize: 14),
