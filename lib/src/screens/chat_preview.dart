@@ -66,7 +66,6 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
                       //bubbleIndicatorColor = _setOnlineIndicatorColor(colorCode: chatSnippet.isAvailable);
 
                       var chatPreview = ChatPreview.fromDocumentSnapshot(documentSnapshot: documentSnapshot);
-                      //_loadUserDetails(chatPreview.chatPeerId);
 
                       return chatPreviewListTile(
                           peerName: chatPreview.chatPeerName,
@@ -109,34 +108,6 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
     Color color}){
 
   User chatPeer = User.create(displayName: peerName, id: peerId, profilePictureUrl: peerAvatarUrl);
-  //print('chat_details.dart, ln 109 - display name: ${chatPeer.displayName}, pic url: ${chatPeer.profilePictureUrl}');
-
-  Widget _getCircleAvatar(){
-    if(peerAvatarUrl != '' && peerAvatarUrl != ' '){
-      return Container(
-        margin: EdgeInsets.only(right: 10),
-        child: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(peerAvatarUrl)
-        ),
-      );
-    }else{
-      return Container(
-      width: 40,
-      height: 40,
-      margin: EdgeInsets.only(right: 10),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
-      ),
-      child: Center(
-        child: Text(getPlaceholderInitials(peerName),
-          style: Theme.of(context).textTheme.body1.copyWith(
-              color: Colors.white, fontSize: 13),),
-      ),
-    );
-
-    }
-  }
-
     return Container(
       padding: EdgeInsets.all(6.0),
       margin: EdgeInsets.only(top: 11.0, bottom: 16.0, left: 4),
@@ -148,7 +119,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
           Stack(children: <Widget>[
-            _getCircleAvatar(),
+            _getCircleAvatar(chatPeer),
             Positioned(right: 12.0,
                 child: Stack(
                   children: <Widget>[
@@ -198,6 +169,32 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
         ],),
       ),
     );
+  }
+
+  Widget _getCircleAvatar(User chatPeer){
+    if(chatPeer.profilePictureUrl != '' && chatPeer.profilePictureUrl != ' '){
+      return Container(
+        margin: EdgeInsets.only(right: 10),
+        child: CircleAvatar(
+            backgroundImage: CachedNetworkImageProvider(chatPeer.profilePictureUrl)
+        ),
+      );
+    }else{
+      return Container(
+        width: 40,
+        height: 40,
+        margin: EdgeInsets.only(right: 10),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
+        ),
+        child: Center(
+          child: Text(getPlaceholderInitials(chatPeer.displayName),
+            style: Theme.of(context).textTheme.body1.copyWith(
+                color: Colors.white, fontSize: 13),),
+        ),
+      );
+
+    }
   }
 
   void _handleListTileTap({BuildContext context, User chatPeer}){
