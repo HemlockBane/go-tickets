@@ -61,26 +61,15 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
     Widget _getProfilePicture(){
       if(widget.chatPeer.profilePictureUrl != "" && widget.chatPeer.profilePictureUrl != " "){
-//        return Container(
-//          width: 30,
-//          height: 30,
-//          margin: EdgeInsets.only(right: 20),
-//          decoration: BoxDecoration(
-//            image: DecorationImage(
-//                image: CachedNetworkImageProvider(widget.chatPeer.profilePictureUrl, errorListener: (){
-//                  //print('chat_details.dart, ln 71: Error loading image');
-//                }),
-//            ),
-//            borderRadius: BorderRadius.all(Radius.circular(15))
-//            //shape: BoxShape.circle,
-//          ),
-//        );
-
-      return Container(
-        margin: EdgeInsets.all(10),
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(widget.chatPeer.profilePictureUrl, ),),
-      );
+       return Container(
+         width: 30,
+         height: 30,
+         margin: EdgeInsets.only(right: 20, top: 12, bottom: 12),
+         child: CircleAvatar(
+            radius: 15,
+            backgroundImage: CachedNetworkImageProvider(widget.chatPeer.profilePictureUrl,),
+          ),
+       );
 
       }else{
         return Container(
@@ -91,7 +80,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
           ),
           child: Center(
-            child: Text(_getImagePlaceholderInitials()),),
+            child: Text(_getImagePlaceholderInitials()),
+          ),
         );
 
       }
@@ -108,7 +98,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               color: GoTicketsTheme.darkLavender,
             ),
             onPressed: () {}),
-        actions: <Widget>[_getProfilePicture(),
+        actions: <Widget>[
+          _getProfilePicture(),
         ],
       ),
       body: WillPopScope(
