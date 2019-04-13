@@ -87,7 +87,6 @@ class _UsersScreenState extends State<UsersScreen> {
       );
 
     }
-
   }
 
   void _handleTileTap({BuildContext context, User chatPeer}){
