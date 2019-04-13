@@ -6,9 +6,9 @@ import 'dart:async';
 
 import '../models/chat.dart';
 import '../models/models.dart';
-import '../screens/home.dart';
-import '../screens/users.dart';
+import '../widgets/formatter.dart';
 import '../widgets/theme.dart';
+import '../screens/users.dart';
 import './chats/chat_details.dart';
 
 class ChatPreviewScreen extends StatefulWidget {
@@ -111,19 +111,8 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
   User chatPeer = User.create(displayName: peerName, id: peerId, profilePictureUrl: peerAvatarUrl);
   //print('chat_details.dart, ln 109 - display name: ${chatPeer.displayName}, pic url: ${chatPeer.profilePictureUrl}');
 
-  String _getImagePlaceholderInitials(){
-
-    String chatPeerName = peerName;
-    List nameList = chatPeerName.split(' ');
-
-    String name = nameList[0];
-    String surname = nameList[1];
-
-    return name.substring(0, 1) + surname.substring(0, 1);
-  }
-
   Widget _getCircleAvatar(){
-    if(peerAvatarUrl != "" && peerAvatarUrl != " "){
+    if(peerAvatarUrl != '' && peerAvatarUrl != ' '){
       return Container(
         margin: EdgeInsets.only(right: 10),
         child: CircleAvatar(
@@ -139,7 +128,7 @@ class _ChatPreviewScreenState extends State<ChatPreviewScreen> {
         shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
       ),
       child: Center(
-        child: Text(_getImagePlaceholderInitials(), style: TextStyle(color: Colors.white),),
+        child: Text(getPlaceholderInitials(peerName), style: TextStyle(color: Colors.white),),
       ),
     );
 

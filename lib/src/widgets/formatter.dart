@@ -1,5 +1,18 @@
 import 'package:intl/intl.dart';
 
+
+
+String getPlaceholderInitials(String userName){
+
+  List nameList = userName.split(' ');
+
+  String name = nameList[0];
+  String surname = nameList[1];
+
+  return name.substring(0, 1) + surname.substring(0, 1);
+}
+
+
 String formatTime(String timeInMillisecs) {
   String formattedTime = '';
   DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(timeInMillisecs));

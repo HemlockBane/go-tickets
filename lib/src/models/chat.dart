@@ -1,9 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'models.dart';
-import '../widgets/datetime_formatter.dart';
+import '../widgets/formatter.dart';
 
 class Chat {
   String chatPeer = '';

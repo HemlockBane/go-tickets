@@ -4,9 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:go_tickets/src/widgets/theme.dart';
+import 'package:go_tickets/src/widgets/formatter.dart';
 import 'package:go_tickets/src/models/chat.dart';
 import 'package:go_tickets/src/models/models.dart';
-import 'package:go_tickets/src/widgets/datetime_formatter.dart';
+
 
 class ChatDetailsScreen extends StatefulWidget {
   final User chatPeer;
@@ -47,18 +48,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   @override
   Widget build(BuildContext context) {
 
-    String _getImagePlaceholderInitials(){
-
-      String chatPeerName = widget.chatPeer.displayName;
-      List nameList = chatPeerName.split(' ');
-
-      String name = nameList[0];
-      String surname = nameList[1];
-
-      return name.substring(0, 1) + surname.substring(0, 1);
-    }
-
-
     Widget _getProfilePicture(){
       if(widget.chatPeer.profilePictureUrl != "" && widget.chatPeer.profilePictureUrl != " "){
        return Container(
@@ -80,7 +69,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
           ),
           child: Center(
-            child: Text(_getImagePlaceholderInitials()),
+            child: Text(getPlaceholderInitials(widget.chatPeer.displayName)),
           ),
         );
 
