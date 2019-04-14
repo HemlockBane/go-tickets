@@ -157,7 +157,10 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
         if(!snapshot.hasData){
           return Center(
-            child: Text('No chats'),
+            child: Text('No chats', style: Theme.of(context).textTheme.body1.copyWith(
+              color: GoTicketsTheme.darkGrey,
+              fontSize: 14
+            ),),
           );
         }
 
