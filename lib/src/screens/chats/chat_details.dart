@@ -143,7 +143,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               .limit(chatLimit)
               .snapshots(),
           builder: (context, snapshot){
-            List documentList = snapshot.data.documents as List;
+            //List documentList = snapshot.data.documents as List;
 
         if(snapshot.hasError){
           return Center(
@@ -154,22 +154,22 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               ),
           );
         }
-            switch(documentList.isEmpty){
-              case true:
-                return Center(
-                  child: Text('No chats'),
-                );
-              case false:
-                chatList = snapshot.data.documents;
-                return ListView.builder(
-                  controller: listScrollController,
-                  itemCount: chatList.length,
-                  itemBuilder: (context, rowIndex){
 
-                    return _buildChatItem(document: chatList[rowIndex], index: rowIndex);
-                  },
-                  reverse: true,);
-            }
+        if(!snapshot.hasData){
+          return Center(
+            child: Text('No chats'),
+          );
+        }
+
+        chatList = snapshot.data.documents;
+        return ListView.builder(
+          controller: listScrollController,
+          itemCount: chatList.length,
+          itemBuilder: (context, rowIndex){
+
+            return _buildChatItem(document: chatList[rowIndex], index: rowIndex);
+          },
+          reverse: true,);
           }),
     );
   }
