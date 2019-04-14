@@ -153,29 +153,23 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                 ),
               ),
           );
-        }else if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(GoTicketsTheme.darkLavender),),
-          );
-        }else{
-          switch(documentList.isEmpty){
-            case true:
-              return Center(
-                child: Text('No chats'),
-              );
-            case false:
-              chatList = snapshot.data.documents;
-              return ListView.builder(
-                controller: listScrollController,
-                itemCount: chatList.length,
-                itemBuilder: (context, rowIndex){
-
-                  return _buildChatItem(document: chatList[rowIndex], index: rowIndex);
-                },
-                reverse: true,);
-          }
         }
+            switch(documentList.isEmpty){
+              case true:
+                return Center(
+                  child: Text('No chats'),
+                );
+              case false:
+                chatList = snapshot.data.documents;
+                return ListView.builder(
+                  controller: listScrollController,
+                  itemCount: chatList.length,
+                  itemBuilder: (context, rowIndex){
+
+                    return _buildChatItem(document: chatList[rowIndex], index: rowIndex);
+                  },
+                  reverse: true,);
+            }
           }),
     );
   }
