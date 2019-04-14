@@ -23,6 +23,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   TextEditingController textEditingController = TextEditingController();
   FocusNode textFocusNode;
   ScrollController listScrollController;
+  DocumentReference documentReference;
+  DocumentReference chatIdDocumentReference;
 
   bool isShowingSmileys = false;
   int chatLimit = 10;
@@ -62,33 +64,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _getProfilePicture(){
-      if(widget.chatPeer.profilePictureUrl != "" && widget.chatPeer.profilePictureUrl != " "){
-       return Container(
-         width: 30,
-         height: 30,
-         margin: EdgeInsets.only(right: 20, top: 12, bottom: 12),
-         child: CircleAvatar(
-            radius: 15,
-            backgroundImage: CachedNetworkImageProvider(widget.chatPeer.profilePictureUrl,),
-          ),
-       );
-
-      }else{
-        return Container(
-          width: 30,
-          height: 30,
-          margin: EdgeInsets.only(right: 20),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
-          ),
-          child: Center(
-            child: Text(getPlaceholderInitials(widget.chatPeer.displayName)),
-          ),
-        );
-
-      }
-    }
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -119,6 +94,35 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     );
   }
 
+  Widget _getProfilePicture(){
+    if(widget.chatPeer.profilePictureUrl != "" && widget.chatPeer.profilePictureUrl != " "){
+      return Container(
+        width: 30,
+        height: 30,
+        margin: EdgeInsets.only(right: 20, top: 12, bottom: 12),
+        child: CircleAvatar(
+          radius: 15,
+          backgroundImage: CachedNetworkImageProvider(widget.chatPeer.profilePictureUrl,),
+        ),
+      );
+
+    }else{
+      return Container(
+        width: 30,
+        height: 30,
+        margin: EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle, color: GoTicketsTheme.darkGrey,
+        ),
+        child: Center(
+          child: Text(getPlaceholderInitials(widget.chatPeer.displayName)),
+        ),
+      );
+
+    }
+  }
+
+
   Future<bool>_handleBackButtonAction(){
     Navigator.pop(context);
     return Future.value(false);
@@ -139,22 +143,38 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               .limit(chatLimit)
               .snapshots(),
           builder: (context, snapshot){
-        if(!snapshot.hasData){
+            List documentList = snapshot.data.documents as List;
+
+        if(snapshot.hasError){
+          return Center(
+              child: Text('Error: ${snapshot.error}',
+                style: Theme.of(context).textTheme.caption.copyWith(
+                  fontSize: 14
+                ),
+              ),
+          );
+        }else if(snapshot.connectionState == ConnectionState.waiting){
           return Center(
               child: CircularProgressIndicator(
-                valueColor:
-                AlwaysStoppedAnimation<Color>(GoTicketsTheme.darkLavender),
-              ));
+                valueColor: AlwaysStoppedAnimation<Color>(GoTicketsTheme.darkLavender),),
+          );
         }else{
-          chatList = snapshot.data.documents;
-          return ListView.builder(
-            controller: listScrollController,
-              itemCount: chatList.length,
-              itemBuilder: (context, rowIndex){
+          switch(documentList.isEmpty){
+            case true:
+              return Center(
+                child: Text('No chats'),
+              );
+            case false:
+              chatList = snapshot.data.documents;
+              return ListView.builder(
+                controller: listScrollController,
+                itemCount: chatList.length,
+                itemBuilder: (context, rowIndex){
 
-                return _buildChatItem(document: chatList[rowIndex], index: rowIndex);
-              },
-          reverse: true,);
+                  return _buildChatItem(document: chatList[rowIndex], index: rowIndex);
+                },
+                reverse: true,);
+          }
         }
           }),
     );
@@ -285,13 +305,13 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       String chatId = _createChatId(recipientId:peerId, userProfileId: userProfileId);
       String timeSent = DateTime.now().millisecondsSinceEpoch.toString();
 
-      DocumentReference documentReference = Firestore.instance
+      documentReference = Firestore.instance
       .collection('messages')
       .document(chatId)
       .collection('chats')
       .document(timeSent);
 
-      DocumentReference chatIdDocumentReference = Firestore.instance
+      chatIdDocumentReference = Firestore.instance
           .collection('messages')
           .document(chatId);
 
