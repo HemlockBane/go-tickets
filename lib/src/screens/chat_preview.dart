@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
 
-
 import '../models/chat.dart';
 import '../models/models.dart';
 import '../widgets/formatter.dart';

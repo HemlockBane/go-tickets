@@ -63,6 +63,7 @@ class _GoTicketsAppDrawerState extends State<GoTicketsAppDrawer> {
   }
 
   List<Widget> _drawerItems() {
+
     List<Widget> itemList =
         List.generate(widget.drawerItemDataList.length, (int itemDataIndex) {
       return _buildTabBarItem(

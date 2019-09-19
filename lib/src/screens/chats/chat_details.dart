@@ -39,7 +39,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     textFocusNode = FocusNode();
     textFocusNode.addListener(_handleKeyboardActiveState);
     listScrollController = ScrollController();
-    listScrollController.addListener(_scrollListener);
+    listScrollController.addListener(_scrollLimitListener);
   }
 
   /// Hide smileys when keyboard is active
@@ -51,7 +51,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     }
   }
 
-  _scrollListener() {
+  _scrollLimitListener() {
     if (listScrollController.offset >=
         listScrollController.position.maxScrollExtent &&
         !listScrollController.position.outOfRange) {
@@ -139,7 +139,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               .collection('messages')
               .document(chatId)
               .collection('chats')
-              .orderBy('time_sent', descending: true)
+              .orderBy('time_sent', descending: true) // Reverse chat order
               .limit(chatLimit)
               .snapshots(),
           builder: (context, snapshot){
@@ -166,13 +166,14 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
         chatList = snapshot.data.documents;
         return ListView.builder(
+          reverse: true, // Reversing a reversed chat list gives the bouncy animation feel
           controller: listScrollController,
           itemCount: chatList.length,
           itemBuilder: (context, rowIndex){
 
             return _buildChatItem(document: chatList[rowIndex], index: rowIndex);
           },
-          reverse: true,);
+        );
           }),
     );
   }
@@ -190,8 +191,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(top: 2.5,
-                    right: 10.0),
+                margin: EdgeInsets.only(top: 2.5, right: 10.0),
                 padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                 constraints: BoxConstraints(maxWidth: 300),
                 child: Text(chat.message,
@@ -209,7 +209,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       return Column(
         children: <Widget>[
           Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(top: 2.5, bottom: 2.5, left: 10.0),
@@ -223,30 +223,14 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
 
               )],
           ),
-          isLastLeftMessage(index: index, userId: userId) ?
-          Text(formatTime(chat.messageDate),
-            style: Theme.of(context).textTheme.body1.copyWith(
-                color: GoTicketsTheme.lightGrey, fontSize: 15),) :
-          Container()
+          isLastLeftMessage(index: index, userId: userId)
+              ? Text(formatTime(chat.messageDate),
+                  style: Theme.of(context).textTheme.body1.copyWith(
+                    color: GoTicketsTheme.lightGrey, fontSize: 15),)
+              : Container()
       ],);
     }
 
-  }
-
-  bool isLastLeftMessage({int index, String userId }){
-    if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] == userId) || index == 0){
-      return true;
-    }else{
-      return false;
-    }
-  }
-
-  bool isLastRightMessage({int index, String userId }){
-    if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] != userId) || index == 0){
-      return true;
-    }else{
-      return false;
-    }
   }
 
   Widget _buildTextInputBar(){
@@ -287,6 +271,22 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       ),
       width: MediaQuery.of(context).size.width,
     );
+  }
+
+  bool isLastLeftMessage({int index, String userId }){
+    if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] == userId) || index == 0){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  bool isLastRightMessage({int index, String userId }){
+    if((index > 0 && chatList != null && chatList[index - 1]['sender_id'] != userId) || index == 0){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   void _handleSendButtonTap(String message){

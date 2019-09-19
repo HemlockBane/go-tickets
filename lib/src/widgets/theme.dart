@@ -22,7 +22,7 @@ class GoTicketsTheme{
       primaryColorLight: lightLavender,
       primaryIconTheme: IconThemeData(color: darkLavender),
       accentColor: darkGrey,
-      scaffoldBackgroundColor: Colors.white,
+      //scaffoldBackgroundColor: Colors.white,
       textTheme: baseTheme.textTheme.copyWith(
       title: baseTheme.textTheme.title.copyWith(
           fontSize: 18,

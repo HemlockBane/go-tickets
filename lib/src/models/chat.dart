@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../widgets/formatter.dart';
 
 class Chat {
