@@ -11,16 +11,15 @@ String getPlaceholderInitials(String userName) {
 
 String formatTime(String timeInMillisecs) {
   String formattedTime = '';
-  DateTime dateTime =
-      DateTime.fromMillisecondsSinceEpoch(int.parse(timeInMillisecs));
-  DateTime dateOnly = DateTime(dateTime.year, dateTime.month, dateTime.day);
+  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(timeInMillisecs));
+  DateTime dateWithoutTime = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
   DateTime now = DateTime.now();
-  DateTime nowDateOnly = DateTime(now.year, now.month, now.day);
+  DateTime nowDateWithoutTime = DateTime(now.year, now.month, now.day);
   //print('time_tool.dart - fed in ${formatDate(dateTime: dateTime)}');
 
   Duration timeDifference = now.difference(dateTime);
-  Duration dateDifference = nowDateOnly.difference(dateOnly);
+  Duration dateDifference = nowDateWithoutTime.difference(dateWithoutTime);
 
   if (dateDifference.inDays == 1) {
     formattedTime = 'Yesterday';
@@ -68,8 +67,7 @@ String formatTime(String timeInMillisecs) {
   return formattedTime;
 }
 
-String formatDate(
-    {DateTime dateTime, String messageDateString, bool isDateTime = true}) {
+String formatDate({DateTime dateTime, String messageDateString, bool isDateTime = true}) {
   String formattedTime = "";
   String formatPattern = 'dd/MM/yyyy';
   if (isDateTime) {

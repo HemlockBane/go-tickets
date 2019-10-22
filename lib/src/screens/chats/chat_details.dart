@@ -302,12 +302,14 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       String chatId = _createChatId(recipientId:peerId, userProfileId: userProfileId);
       String timeSent = DateTime.now().millisecondsSinceEpoch.toString();
 
+      // To store the chats in the chat details screen
       documentReference = Firestore.instance
       .collection('messages')
       .document(chatId)
       .collection('chats')
       .document(timeSent);
 
+      // To store the chat in the chat preview
       chatIdDocumentReference = Firestore.instance
           .collection('messages')
           .document(chatId);
